@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Messager</string>
+    <string name="send"> Message SendMessage</string>
+    <string name="hint">Enter a message</string>
+    <string name="_2nd_activity">2nd Activity</string>
+    <string name="chooser">Send Message via...</string>
+</resources>
