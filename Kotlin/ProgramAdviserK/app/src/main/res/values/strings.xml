@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Program Adviser K</string>
+    <string name="fing_language">Find Language!</string>
+    <string name="language">Select and Click</string>
+    <string-array name="feature">
+        <item>fast</item>
+        <item>easy</item>
+        <item>new</item>
+        <item>OO</item>
+    </string-array>
+
+</resources>
