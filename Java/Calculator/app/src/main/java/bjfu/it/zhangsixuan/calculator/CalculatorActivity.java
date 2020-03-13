@@ -33,14 +33,15 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
     private Button btn_mul;         // *按钮
     private Button btn_div;         // /按钮
     private Button btn_equal;       // =按钮
-    private ImageButton btn_sqrt;        // √按钮
+    private ImageButton btn_sqrt;   // √按钮
 
-    private TextView showHistory;   // 显示历史
-    private TextView showNow;       // 显示结果
+    private TextView showHistory;               // 显示历史
+    private TextView showNow;                   // 显示结果
 
-    boolean ifClickOp;              // 是否点击了操作符
+    boolean hasCalculated = false;              // 完成计算
+                                                // 计算后点击数字、计算后点击操作符（把运算结果当作第一个操作数）
 
-    String express; // 在history里展现的表达式
+    String express;                             // 在history里展现的表达式
 
 
     @Override
@@ -63,18 +64,18 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         btn_dot = findViewById(R.id.button_dot);         // 小数点按钮
 
         btn_ce = findViewById(R.id.button_ce);          // 全部清空按钮
-        btn_c = findViewById(R.id.button_c);           // 清空输入按钮
+        btn_c = findViewById(R.id.button_c);            // 清空输入按钮
 
-        btn_plus = findViewById(R.id.button_plus);        // +按钮
-        btn_minus = findViewById(R.id.button_minus);       // -按钮
-        btn_mul = findViewById(R.id.button_mul);     // *按钮
-        btn_div = findViewById(R.id.button_div);      // /按钮
-        btn_equal = findViewById(R.id.button_equal);       // =按钮
+        btn_plus = findViewById(R.id.button_plus);          // +按钮
+        btn_minus = findViewById(R.id.button_minus);        // -按钮
+        btn_mul = findViewById(R.id.button_mul);            // *按钮
+        btn_div = findViewById(R.id.button_div);            // /按钮
+        btn_equal = findViewById(R.id.button_equal);        // =按钮
 
-        btn_sqrt = findViewById(R.id.button_sqrt);       // √按钮
+        btn_sqrt = findViewById(R.id.button_sqrt);          // √按钮
 
-        showHistory = findViewById(R.id.show_history);   // 显示历史
-        showNow = findViewById(R.id.show_now);       // 显示正在输入的
+        showHistory = findViewById(R.id.show_history);      // 显示历史
+        showNow = findViewById(R.id.show_now);              // 显示正在输入的
 
         // 监听器
         btn_0.setOnClickListener(this);
@@ -117,6 +118,12 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             case R.id.button_num_8:
             case R.id.button_num_9:
             case R.id.button_dot:
+                // 完成上次计算
+                if (hasCalculated){
+                    showHistory.setText("");
+                    input = "";
+                    hasCalculated = false;
+                }
                 // 数字部分
                 input = input + ((Button) v).getText().toString();
                 showNow.setText(input);
@@ -126,6 +133,12 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             case R.id.button_div:
             case R.id.button_plus:
             case R.id.button_minus:
+                // 完成上次计算
+                if (hasCalculated){
+                    showHistory.setText("");
+                    input = showNow.getText().toString();  // 上一次的计算结果
+                    hasCalculated = false;
+                }
                 // 加减乘除
                 express = showHistory.getText().toString() + input + ((Button) v).getText().toString();
                 showHistory.setText(express);
@@ -133,6 +146,12 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 break;
 
             case R.id.button_sqrt:
+                //完成上次计算
+                if (hasCalculated){
+                    showHistory.setText("");
+                    input = showNow.getText().toString();
+                    hasCalculated = false;
+                }
                 // 根号
                 express = showHistory.getText().toString() + '√' + '(' + input + ')';
                 showHistory.setText(express);
@@ -149,15 +168,18 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
                 break;
 
             case R.id.button_equal:
-                // 加减乘除
-                express = showHistory.getText().toString() + input + ((Button) v).getText().toString();
-                showHistory.setText(express);
-                calculate();
+                if (!hasCalculated){
+                    // 加减乘除
+                    express = showHistory.getText().toString() + input + ((Button) v).getText().toString();
+                    showHistory.setText(express);
+                    calculate();
+                    hasCalculated = true;
+                }
                 break;
         }
-
     }
 
+    // 计算 + 展示结果/提示错误信息
     private void calculate() {
         String expression = showHistory.getText().toString();
         String result = MyCalculator.getResult(expression);
@@ -170,7 +192,6 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
             int duration = Toast.LENGTH_SHORT;
             Toast.makeText(context, result, duration).show();
         }
-
     }
 
     // 判断String是否为数值类型，包括浮点数和负数
