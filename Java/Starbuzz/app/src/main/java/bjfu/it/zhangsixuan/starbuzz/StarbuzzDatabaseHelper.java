@@ -10,7 +10,7 @@ public class StarbuzzDatabaseHelper extends SQLiteOpenHelper {
 
 
     private static final String DB_NAME = "starbuzz.db";
-    private static final int DB_VERSION = 3;
+    private static final int DB_VERSION =3;
 
     /*
      * 向父类构造函数传入数据库名称和版本
