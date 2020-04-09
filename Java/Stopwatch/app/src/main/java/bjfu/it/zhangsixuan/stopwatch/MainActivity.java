@@ -2,6 +2,8 @@ package bjfu.it.zhangsixuan.stopwatch;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.OnLifecycleEvent;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -65,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void runTimer() {
-        final TextView timeView = (TextView) findViewById(R.id.time_view);
+        final TextView timeView = findViewById(R.id.time_view);
 
         //创建UI线程的handler，用于消息处理
         final Handler handler = new Handler();
