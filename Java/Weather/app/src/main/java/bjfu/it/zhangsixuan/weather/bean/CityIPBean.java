@@ -1,5 +1,8 @@
 package bjfu.it.zhangsixuan.weather.bean;
 
+import androidx.annotation.Keep;
+
+@Keep
 public class CityIPBean {
 
     String ip;

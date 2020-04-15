@@ -8,6 +8,7 @@ public class MyCalculator {
     static private Stack<Character> operStack = new Stack<>();
     static private Stack<Double> numStack = new Stack<>();
 
+    // 计算得到结果
     static String getResult(String expression) {
         String result = "";
 
@@ -75,6 +76,7 @@ public class MyCalculator {
         return result;
     }
 
+    // 操作符号栈顶，分单操作数和双操作数
     static String operateStackTop() {
         char cTop = operStack.pop();
         // 单操作数√
@@ -104,6 +106,7 @@ public class MyCalculator {
         return "";
     }
 
+    // 操作符的优先级
     private static int getPriorty(char cTop) {
         int level = 0;
         if (cTop == '+' || cTop == '-')

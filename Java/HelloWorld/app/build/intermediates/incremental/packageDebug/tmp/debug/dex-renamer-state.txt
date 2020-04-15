@@ -1,7 +1,0 @@
-#Tue Feb 18 14:53:00 CST 2020
-base.0=/Users/christy/Workspaces/AndroidStudioProjects/HelloWorld/app/build/intermediates/dex/debug/mergeExtDexDebug/out
-path.1=classes.dex
-renamed.1=classes2.dex
-path.0=classes.dex
-renamed.0=classes.dex
-base.1=/Users/christy/Workspaces/AndroidStudioProjects/HelloWorld/app/build/intermediates/dex/debug/mergeProjectDexDebug/out

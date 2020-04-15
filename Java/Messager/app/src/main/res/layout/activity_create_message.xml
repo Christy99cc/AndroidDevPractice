@@ -27,14 +27,14 @@
             android:text="@string/send"
             android:textSize="30sp"
             android:onClick="onSendMessage"/>
+
         <Button
             android:id="@+id/button1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Action"
+            android:text="@string/chooser"
             android:ems="10"
             android:textSize="30sp"
-            android:onClick="onSendAction"
-            ></Button>
+            android:onClick="onSendAction" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

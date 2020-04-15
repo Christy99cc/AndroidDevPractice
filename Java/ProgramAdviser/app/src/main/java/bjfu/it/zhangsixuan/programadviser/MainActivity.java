@@ -8,16 +8,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-
-
     private final ProgramExpert programExpert = new ProgramExpert();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
-
     public void onClickButton(View button) {
 
         // get spinner 引用
@@ -35,6 +31,4 @@ public class MainActivity extends AppCompatActivity {
         // set text
         textView.setText(language);
     }
-
-
 }

@@ -1,6 +1,8 @@
 package bjfu.it.zhangsixuan.weather.bean;
 
+import androidx.annotation.Keep;
 
+@Keep
 public class CityInfoWeather {
 
     private WeatherInfo weatherinfo;
@@ -13,6 +15,7 @@ public class CityInfoWeather {
         this.weatherinfo = weatherinfo;
     }
 
+    @Keep
     public class WeatherInfo{
         private String weather;
 

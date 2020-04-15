@@ -13,6 +13,7 @@ import android.widget.ListView;
 import java.util.List;
 
 import bjfu.it.zhangsixuan.weather.utils.CityHelper;
+import bjfu.it.zhangsixuan.weather.utils.LeakCanaryUtils;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -43,5 +44,9 @@ public class CityListActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        // 内存泄露测试
+        // LeakCanaryUtils.addContext(this);
+
     }
 }

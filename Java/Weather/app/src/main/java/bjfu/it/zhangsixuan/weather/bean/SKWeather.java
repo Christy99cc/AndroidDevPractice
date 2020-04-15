@@ -1,5 +1,8 @@
 package bjfu.it.zhangsixuan.weather.bean;
 
+import androidx.annotation.Keep;
+
+@Keep
 public class SKWeather {
     private WeatherInfo weatherinfo;
 
@@ -11,6 +14,7 @@ public class SKWeather {
         this.weatherinfo = weatherinfo;
     }
 
+    @Keep
     public class WeatherInfo {
         private String temp; // temperature;
         private String WD;   // windDirection;
