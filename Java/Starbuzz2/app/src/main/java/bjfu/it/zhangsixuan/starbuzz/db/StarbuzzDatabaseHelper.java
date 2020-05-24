@@ -41,6 +41,7 @@ public class StarbuzzDatabaseHelper extends SQLiteOpenHelper {
         insertStuff(db, "DRINK","Filter",
                 "Our best drip coffee", R.drawable.dk_filter, 22);
 
+
         /*
          * 创建FOOD表，并添加食品
          */
@@ -51,12 +52,24 @@ public class StarbuzzDatabaseHelper extends SQLiteOpenHelper {
                 "FAVORITE NUMERIC," +
                 "PRICE NUMERIC)";
         db.execSQL(sql_fd);
-        insertStuff(db, "FOOD","Latte",
-                "Espresso and steamed milk", R.drawable.dk_latte, 25);
-        insertStuff(db, "FOOD","Cappuccino",
-                "Espresso, hot milk and steamed-milk foam", R.drawable.dk_cappuccino, 27);
-        insertStuff(db, "FOOD","Filter",
-                "Our best drip coffee", R.drawable.dk_filter, 22);
+
+        insertStuff(db, "FOOD","Sandwich",
+                "Sizzling applewood-smoked bacon, " +
+                        "melty aged Gouda and a Parmesan frittata layered " +
+                        "on an artisan roll for extra-smoky breakfast goodness.",
+                R.drawable.fd_sandwich_1, 30);
+        insertStuff(db, "FOOD","Oatmeal",
+                "A blend of rolled and steel-cut oats with dried fruit, " +
+                        "a nut medley and brown sugar as optional toppings. " +
+                        "Hearty. Traditional. Classic.",
+                R.drawable.fd_oatmeal_1, 32);
+
+        insertStuff(db, "FOOD","Muffin",
+                "This delicious muffin is dotted throughout with sweet, " +
+                        "juicy blueberries and a hint of lemon and dusted on top " +
+                        "with sugar for a delightfully crunchy texture.",
+                R.drawable.fd_muffin_1, 25);
+
 
 
         /*
@@ -69,19 +82,26 @@ public class StarbuzzDatabaseHelper extends SQLiteOpenHelper {
                 "FAVORITE NUMERIC," +
                 "PRICE NUMERIC)";
         db.execSQL(sql_st);
-        insertStuff(db, "STORE","Latte",
-                "Espresso and steamed milk", R.drawable.dk_latte, 25);
-        insertStuff(db, "STORE","Cappuccino",
-                "Espresso, hot milk and steamed-milk foam", R.drawable.dk_cappuccino, 27);
-        insertStuff(db, "STORE","Filter",
-                "Our best drip coffee", R.drawable.dk_filter, 22);
+        insertStuff(db, "STORE","VIAInstant",
+                "Refreshing, revitalizing cool lime in our convenient, " +
+                        "take-anywhere Starbucks VIA Instant Refreshers™ beverage packets.",
+                R.drawable.st_viainstant_1, 50);
+        insertStuff(db, "STORE","VerismoPods",
+                "Medium Roast — Unmistakable grapefruit and black currant notes." +
+                        " Delicious served over ice.", R.drawable.st_verismopods_1, 52);
+        insertStuff(db, "STORE","WholeBean",
+                "Named after the mist that casts a blue-tinged glow over " +
+                        "Jamaican mountainsides, this coffee is a returning customer favorite, " +
+                        "with layers of citrus and a hint of cocoa.",
+                R.drawable.st_wholebean_1, 56);
+
     }
 
 
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        
+
 
     }
 
