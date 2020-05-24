@@ -27,6 +27,9 @@ public class DrinkCategoryFragment extends Fragment {
 
     private Cursor cursor;
 
+    static final String EXTRA_CATEGORY_NAME = "categoryName";
+    private String categoryName;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -39,7 +42,12 @@ public class DrinkCategoryFragment extends Fragment {
             /*
              * selection 的位置是null
              */
-            cursor = db.query("DRINK", new String[]{"_id", "NAME"}, null,
+
+            //获取Bundle
+            Bundle bundle = getArguments();
+            categoryName = bundle.getString(EXTRA_CATEGORY_NAME);
+
+            cursor = db.query(categoryName, new String[]{"_id", "NAME"}, null,
                     null, null, null, null, null);
             SimpleCursorAdapter listAdapter = new SimpleCursorAdapter(
                     getActivity(),
@@ -73,6 +81,7 @@ public class DrinkCategoryFragment extends Fragment {
                 DrinkFragment drinkFragment = new DrinkFragment();
                 Bundle bundle = new Bundle();
                 bundle.putInt(DrinkFragment.EXTRA_DRINKID, (int) id);
+                bundle.putString(EXTRA_CATEGORY_NAME, categoryName);
                 drinkFragment.setArguments(bundle);
 
                 transaction
@@ -82,16 +91,11 @@ public class DrinkCategoryFragment extends Fragment {
                         .commit();
 
                 Toast.makeText(getActivity(), "click position:" + position, Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(DrinkCategoryActivity.this, DrinkActivity.class);
-//                intent.putExtra(DrinkActivity.EXTRA_DRINKID, (int) id);
-//                startActivity(intent);
             }
         };
 
         // 设置监听器
         listDrinks.setOnItemClickListener(itemClickListener);
-//        ListView listView = findViewById(R.id.list_drinks);
-//        listView.setOnItemClickListener(itemClickListener);
 
         return root;
     }
@@ -101,5 +105,11 @@ public class DrinkCategoryFragment extends Fragment {
         super.onDestroyView();
         cursor.close();
         Log.d("debug", "DrinkCategoryFragment销毁");
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onActivityCreated(savedInstanceState);
     }
 }

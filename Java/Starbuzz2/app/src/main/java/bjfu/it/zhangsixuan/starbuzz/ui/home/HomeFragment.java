@@ -15,7 +15,10 @@ import androidx.fragment.app.FragmentTransaction;
 
 import bjfu.it.zhangsixuan.starbuzz.R;
 
+import static bjfu.it.zhangsixuan.starbuzz.ui.home.DrinkCategoryFragment.EXTRA_CATEGORY_NAME;
+
 public class HomeFragment extends Fragment {
+    private String categoryName;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -30,23 +33,25 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(getActivity(), "click position:" + position, Toast.LENGTH_SHORT)
                         .show();
                 if (position == 0) { // Drinks
-//                    Intent intent = new Intent(getActivity(),
-//                            DrinkCategoryActivity.class);
-//                    startActivity(intent);
-                    //开启事务跳转
-                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                    String textItem =  ((TextView) view).getText().toString();
-                    DrinkCategoryFragment drinkCategoryFragment = new DrinkCategoryFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("productTitle", textItem);
-                    drinkCategoryFragment.setArguments(bundle);
-
-                    transaction
-                            .addToBackStack(null)  //将当前fragment加入到返回栈中
-                            .replace(R.id.nav_host_fragment,drinkCategoryFragment)
-                            .show(drinkCategoryFragment)
-                            .commit();
+                    categoryName = "DRINK";
+                }else if (position == 1){
+                    categoryName = "FOOD";
+                }else if(position == 2){
+                    categoryName = "STORE";
                 }
+
+                //开启事务跳转
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                DrinkCategoryFragment drinkCategoryFragment = new DrinkCategoryFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString(EXTRA_CATEGORY_NAME, categoryName);
+                drinkCategoryFragment.setArguments(bundle);
+
+                transaction
+                        .addToBackStack(null)  //将当前fragment加入到返回栈中
+                        .replace(R.id.nav_host_fragment,drinkCategoryFragment)
+                        .show(drinkCategoryFragment)
+                        .commit();
             }
         };
         listView.setOnItemClickListener(itemClickListener);

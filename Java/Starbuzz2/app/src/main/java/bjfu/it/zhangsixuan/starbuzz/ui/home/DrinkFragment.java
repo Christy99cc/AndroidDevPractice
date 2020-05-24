@@ -27,8 +27,10 @@ import bjfu.it.zhangsixuan.starbuzz.db.StarbuzzDatabaseHelper;
 
 public class DrinkFragment extends Fragment {
 
-    public static final String EXTRA_DRINKID = "drinkId";
+    static final String EXTRA_DRINKID = "drinkId";
     private int drinkId;
+    private String categoryName;
+
     private CheckBox cb_favorite;
     private Cursor cursor;
 
@@ -41,7 +43,7 @@ public class DrinkFragment extends Fragment {
         Bundle bundle = getArguments();
         assert bundle != null;
         drinkId = bundle.getInt(EXTRA_DRINKID);
-        drinkId = bundle.getInt(EXTRA_DRINKID, 0);
+        categoryName = bundle.getString(DrinkCategoryFragment.EXTRA_CATEGORY_NAME);
 
         View root = inflater.inflate(R.layout.fragment_drink, container, false);
 
@@ -57,11 +59,12 @@ public class DrinkFragment extends Fragment {
         try (SQLiteDatabase db = starbuzzDatabaseHelper.getReadableDatabase()) {
 
             Log.d("debug", "drinkId:" + drinkId);
-            cursor = db.query("DRINK",
+            cursor = db.query(categoryName,
                     new String[]{"NAME",
                             "DESCRIPTION",
                             "IMAGE_SOURCE_ID",
-                            "FAVORITE"
+                            "FAVORITE",
+                            "PRICE"
                     },
                     "_id=?",
                     new String[]{Integer.toString(drinkId)},
@@ -108,7 +111,7 @@ public class DrinkFragment extends Fragment {
 
         //获取Bundle
         Bundle bundle = getArguments();
-        drinkId = bundle.getInt(EXTRA_DRINKID, 0);
+        drinkId = bundle.getInt(EXTRA_DRINKID);
 
 
         cb_favorite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
