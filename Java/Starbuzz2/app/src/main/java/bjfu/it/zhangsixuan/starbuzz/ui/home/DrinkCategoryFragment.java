@@ -1,6 +1,5 @@
-package bjfu.it.zhangsixuan.starbuzz.ui.dashboard;
+package bjfu.it.zhangsixuan.starbuzz.ui.home;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -18,9 +17,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 import bjfu.it.zhangsixuan.starbuzz.R;
 import bjfu.it.zhangsixuan.starbuzz.db.StarbuzzDatabaseHelper;
@@ -32,8 +30,7 @@ public class DrinkCategoryFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.activity_drink_category, container, false);
-        final ListView listView = root.findViewById(R.id.list_drinks);
+        View root = inflater.inflate(R.layout.fragment_drink_category, container, false);
 
         ListView listDrinks = root.findViewById(R.id.list_drinks);
         SQLiteOpenHelper starbuzzDatabaseHelper = new StarbuzzDatabaseHelper(getActivity());
@@ -70,7 +67,21 @@ public class DrinkCategoryFragment extends Fragment {
                                     View view,
                                     int position,
                                     long id) {
-                Toast.makeText(getActivity(), "clivk position:" + position, Toast.LENGTH_SHORT).show();
+                //开启事务跳转
+                assert getFragmentManager() != null;
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                DrinkFragment drinkFragment = new DrinkFragment();
+                Bundle bundle = new Bundle();
+                bundle.putInt(DrinkFragment.EXTRA_DRINKID, (int) id);
+                drinkFragment.setArguments(bundle);
+
+                transaction
+                        .addToBackStack(null)  //将当前fragment加入到返回栈中
+                        .replace(R.id.nav_host_fragment, drinkFragment)
+                        .show(drinkFragment)
+                        .commit();
+
+                Toast.makeText(getActivity(), "click position:" + position, Toast.LENGTH_SHORT).show();
 //                Intent intent = new Intent(DrinkCategoryActivity.this, DrinkActivity.class);
 //                intent.putExtra(DrinkActivity.EXTRA_DRINKID, (int) id);
 //                startActivity(intent);
@@ -89,5 +100,6 @@ public class DrinkCategoryFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         cursor.close();
+        Log.d("debug", "DrinkCategoryFragment销毁");
     }
 }
