@@ -1,0 +1,93 @@
+package bjfu.it.zhangsixuan.starbuzz.ui.dashboard;
+
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+
+import bjfu.it.zhangsixuan.starbuzz.R;
+import bjfu.it.zhangsixuan.starbuzz.db.StarbuzzDatabaseHelper;
+
+public class DrinkCategoryFragment extends Fragment {
+
+    private Cursor cursor;
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.activity_drink_category, container, false);
+        final ListView listView = root.findViewById(R.id.list_drinks);
+
+        ListView listDrinks = root.findViewById(R.id.list_drinks);
+        SQLiteOpenHelper starbuzzDatabaseHelper = new StarbuzzDatabaseHelper(getActivity());
+
+        try (SQLiteDatabase db = starbuzzDatabaseHelper.getReadableDatabase()) {
+            /*
+             * selection 的位置是null
+             */
+            cursor = db.query("DRINK", new String[]{"_id", "NAME"}, null,
+                    null, null, null, null, null);
+            SimpleCursorAdapter listAdapter = new SimpleCursorAdapter(
+                    getActivity(),
+                    // 内置布局，每行显示一个文本框
+                    android.R.layout.simple_list_item_1,
+                    // 数据源
+                    cursor,
+                    // 显示name
+                    new String[]{"NAME"},
+                    new int[]{android.R.id.text1},
+                    0
+            );
+
+            // 指定适配器
+            listDrinks.setAdapter(listAdapter);
+
+        } catch (SQLiteException e) {
+            Log.e("sqlite", e.getMessage());
+            Toast.makeText(getActivity(), "database unavailable", Toast.LENGTH_SHORT).show();
+        }
+
+        OnItemClickListener itemClickListener = new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> listDrinks,
+                                    View view,
+                                    int position,
+                                    long id) {
+                Toast.makeText(getActivity(), "clivk position:" + position, Toast.LENGTH_SHORT).show();
+//                Intent intent = new Intent(DrinkCategoryActivity.this, DrinkActivity.class);
+//                intent.putExtra(DrinkActivity.EXTRA_DRINKID, (int) id);
+//                startActivity(intent);
+            }
+        };
+
+        // 设置监听器
+        listDrinks.setOnItemClickListener(itemClickListener);
+//        ListView listView = findViewById(R.id.list_drinks);
+//        listView.setOnItemClickListener(itemClickListener);
+
+        return root;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        cursor.close();
+    }
+}

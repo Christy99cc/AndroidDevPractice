@@ -5,15 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.dashboard.DashboardFragment">
+
     <LinearLayout
-        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_width="match_parent">
+        android:orientation="vertical">
+
         <ListView
-            android:id="@+id/list_options"
+            android:id="@+id/list_drinks"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/options"/>
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
