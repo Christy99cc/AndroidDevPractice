@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,21 +27,12 @@ import java.util.Map;
 import bjfu.it.zhangsixuan.starbuzz.R;
 import bjfu.it.zhangsixuan.starbuzz.db.StarbuzzDatabaseHelper;
 
-//import static bjfu.it.zhangsixuan.starbuzz.ui.home.DrinkCategoryFragment.EXTRA_CATEGORY_NAME;
+import static bjfu.it.zhangsixuan.starbuzz.MainActivity.STUFF_TABLE;
+
 
 public class HomeFragment extends Fragment {
 
-//    private String categoryName;
     private int categoryId;
-
-
-    private static final ArrayList<String> tables = new ArrayList<String>();
-
-    static {
-        tables.add("DRINK");
-        tables.add("FOOD");
-        tables.add("STORE");
-    }
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -58,20 +50,13 @@ public class HomeFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getActivity(), "click position:" + position, Toast.LENGTH_SHORT)
                         .show();
-//                if (position == 0) { // Drinks
-//                    categoryName = "DRINK";
-//                } else if (position == 1) {
-//                    categoryName = "FOOD";
-//                } else if (position == 2) {
-//                    categoryName = "STORE";
-//                }
+
                 categoryId = position;
 
                 //开启事务跳转
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 StuffCategoryFragment stuffCategoryFragment = new StuffCategoryFragment();
                 Bundle bundle = new Bundle();
-//                bundle.putString(EXTRA_CATEGORY_NAME, categoryName);
                 bundle.putInt(StuffCategoryFragment.EXTRA_CATEGORY_ID, categoryId);
                 stuffCategoryFragment.setArguments(bundle);
 
@@ -89,6 +74,13 @@ public class HomeFragment extends Fragment {
     private void setupFavoritesListView(View view) {
         ListView listFavorites = view.findViewById(R.id.list_favorites);
 
+        List<Map<String, String>> mapList = getData();
+        TextView textView = view.findViewById(R.id.favorite_label);
+        if (mapList.size() == 0){// 不显示favorite字样
+            textView.setVisibility(View.INVISIBLE);
+        }else {
+            textView.setVisibility(View.VISIBLE);
+        }
         SimpleAdapter favoriteAdapter = new SimpleAdapter(getContext(), getData(),
                 R.layout.favorite_list_item_layout,
                 new String[]{"favorite_image", "favorite_name"},
@@ -103,30 +95,27 @@ public class HomeFragment extends Fragment {
         try {
             SQLiteDatabase db = starbuzzDatabaseHelper.getReadableDatabase();
 
-            // 遍历数据表
-            for (String table : tables) {
-                Cursor favoritesCursor = db.query(table,
-                        new String[]{"_id", "NAME", "IMAGE_SOURCE_ID"}, "FAVORITE=1",
-                        null, null, null, null, null);
+            Cursor favoritesCursor = db.query(STUFF_TABLE,
+                    new String[]{"_id", "NAME", "IMAGE_SOURCE_ID"}, "FAVORITE=1",
+                    null, null, null, null, null);
 
-                // 添加
-                while (favoritesCursor.moveToNext()) {
-                    // 移动光标到下一行
-                    Map<String, String> hashMap = new HashMap<String, String>();
+            // 添加
+            while (favoritesCursor.moveToNext()) {
+                // 移动光标到下一行
+                Map<String, String> hashMap = new HashMap<String, String>();
 
-                    String name = favoritesCursor.getString(favoritesCursor.getColumnIndex("NAME"));
-                    int imageId = favoritesCursor.getInt(favoritesCursor.getColumnIndex("IMAGE_SOURCE_ID"));
+                String name = favoritesCursor.getString(favoritesCursor.getColumnIndex("NAME"));
+                int imageId = favoritesCursor.getInt(favoritesCursor.getColumnIndex("IMAGE_SOURCE_ID"));
 
-                    hashMap.put("favorite_name", name);
-                    hashMap.put("favorite_image", String.valueOf(imageId));
-                    list.add(hashMap);
-                }
+                hashMap.put("favorite_name", name);
+                hashMap.put("favorite_image", String.valueOf(imageId));
+                list.add(hashMap);
             }
+
         } catch (SQLiteException e) {
             Log.d("sqlite", e.getMessage());
             Toast.makeText(getActivity(), "database unavailable", Toast.LENGTH_SHORT).show();
         }
-
 
         return list;
     }

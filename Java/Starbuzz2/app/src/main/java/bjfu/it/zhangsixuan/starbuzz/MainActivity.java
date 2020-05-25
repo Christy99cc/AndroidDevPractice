@@ -15,6 +15,7 @@ import io.sentry.android.AndroidSentryClientFactory;
 
 public class MainActivity extends AppCompatActivity {
     public static final String STUFF_TABLE = "STUFF";
+    public static final String CART_TABLE = "CART";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
