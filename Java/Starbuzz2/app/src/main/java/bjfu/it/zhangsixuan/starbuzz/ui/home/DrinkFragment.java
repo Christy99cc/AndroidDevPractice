@@ -32,7 +32,8 @@ public class DrinkFragment extends Fragment {
     private String categoryName;
 
     private CheckBox cb_favorite;
-    private Cursor cursor;
+
+    private TextView tv_price;
 
 
     @Nullable
@@ -49,6 +50,10 @@ public class DrinkFragment extends Fragment {
 
         cb_favorite = root.findViewById(R.id.favorite);
 
+        tv_price = root.findViewById(R.id.price);
+
+
+
         /*
          * 先实例化helper，再获取数据库引用
          */
@@ -59,7 +64,7 @@ public class DrinkFragment extends Fragment {
         try (SQLiteDatabase db = starbuzzDatabaseHelper.getReadableDatabase()) {
 
             Log.d("debug", "drinkId:" + drinkId);
-            cursor = db.query(categoryName,
+            Cursor cursor = db.query(categoryName,
                     new String[]{"NAME",
                             "DESCRIPTION",
                             "IMAGE_SOURCE_ID",
@@ -75,6 +80,7 @@ public class DrinkFragment extends Fragment {
                 String descriptionText = cursor.getString(1);
                 int photoId = cursor.getInt(2);
                 boolean isFavorite = (cursor.getInt(3) == 1);
+                double price = cursor.getDouble(4);
 
                 // 显示name
                 TextView name = root.findViewById(R.id.name);
@@ -91,6 +97,11 @@ public class DrinkFragment extends Fragment {
 
                 // 显示收藏
                 cb_favorite.setChecked(isFavorite);
+
+                // 显示价格
+                Log.d("debug", "price:" + price);
+                tv_price.setText(""+ price);
+
             }
             cursor.close();
 

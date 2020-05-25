@@ -12,7 +12,7 @@ public class StarbuzzDatabaseHelper extends SQLiteOpenHelper {
 
 
     private static final String DB_NAME = "starbuzz.db";
-    private static final int DB_VERSION =1;
+    private static final int DB_VERSION = 2;
 
     /*
      * 向父类构造函数传入数据库名称和版本
@@ -110,6 +110,18 @@ public class StarbuzzDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+        // 数据库升级到2，添加购物车表
+        if (oldVersion <= 1){
+            /*
+             * 创建CART表，并添加商品
+             */
+            String sql_cart = "CREATE TABLE CART ( _id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "NAME TEXT," +
+                    "IMAGE_SOURCE_ID INTEGER," +
+                    "PRICE NUMERIC, " +
+                    "NUMBER INTEGER)";
+            db.execSQL(sql_cart);
+        }
 
     }
 

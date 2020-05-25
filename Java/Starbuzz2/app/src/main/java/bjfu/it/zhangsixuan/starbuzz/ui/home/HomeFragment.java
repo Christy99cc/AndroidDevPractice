@@ -1,8 +1,6 @@
 package bjfu.it.zhangsixuan.starbuzz.ui.home;
 
-import android.content.Intent;
 import android.database.Cursor;
-import android.database.DataSetObserver;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -12,12 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.CursorAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,13 +20,10 @@ import androidx.fragment.app.FragmentTransaction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
 import bjfu.it.zhangsixuan.starbuzz.R;
-import bjfu.it.zhangsixuan.starbuzz.adapter.FavoriteAdapter;
-import bjfu.it.zhangsixuan.starbuzz.bean.FavoriteBean;
 import bjfu.it.zhangsixuan.starbuzz.db.StarbuzzDatabaseHelper;
 
 import static bjfu.it.zhangsixuan.starbuzz.ui.home.DrinkCategoryFragment.EXTRA_CATEGORY_NAME;
@@ -40,8 +31,6 @@ import static bjfu.it.zhangsixuan.starbuzz.ui.home.DrinkCategoryFragment.EXTRA_C
 public class HomeFragment extends Fragment {
 
     private String categoryName;
-    private Cursor favoritesCursor;
-    private SQLiteDatabase db;
 
 
     private static final ArrayList<String> tables = new ArrayList<String>();
@@ -97,8 +86,6 @@ public class HomeFragment extends Fragment {
     private void setupFavoritesListView(View view) {
         ListView listFavorites = view.findViewById(R.id.list_favorites);
 
-
-//      FavoriteAdapter favoriteAdapter = new FavoriteAdapter(hashMap);
         SimpleAdapter favoriteAdapter = new SimpleAdapter(getContext(), getData(),
                 R.layout.favorite_linear_layout,
                 new String[]{"favorite_image", "favorite_name"},
@@ -111,11 +98,11 @@ public class HomeFragment extends Fragment {
         List<Map<String, String>> list = new ArrayList<Map<String, String>>();
         SQLiteOpenHelper starbuzzDatabaseHelper = new StarbuzzDatabaseHelper(getActivity());
         try {
-            db = starbuzzDatabaseHelper.getReadableDatabase();
+            SQLiteDatabase db = starbuzzDatabaseHelper.getReadableDatabase();
 
             // 遍历数据表
             for (String table : tables) {
-                favoritesCursor = db.query(table,
+                Cursor favoritesCursor = db.query(table,
                         new String[]{"_id", "NAME", "IMAGE_SOURCE_ID"}, "FAVORITE=1",
                         null, null, null, null, null);
 
@@ -124,11 +111,9 @@ public class HomeFragment extends Fragment {
                     // 移动光标到下一行
                     Map<String, String> hashMap = new HashMap<String, String>();
 
-                    String id = String.valueOf(favoritesCursor.getInt(0));
                     String name = favoritesCursor.getString(favoritesCursor.getColumnIndex("NAME"));
                     int imageId = favoritesCursor.getInt(favoritesCursor.getColumnIndex("IMAGE_SOURCE_ID"));
-//                    FavoriteBean bean = new FavoriteBean(Integer.parseInt(id), name, imageId);
-//                    hashMap.put("id", id);
+
                     hashMap.put("favorite_name", name);
                     hashMap.put("favorite_image", String.valueOf(imageId));
                     list.add(hashMap);
