@@ -35,11 +35,19 @@ public class StarbuzzDatabaseHelper extends SQLiteOpenHelper {
                 "PRICE NUMERIC)";
         db.execSQL(sql_dk);
         insertStuff(db, "DRINK","Latte",
-                "Espresso and steamed milk", R.drawable.dk_latte, 25);
+                "Our dark, rich espresso balanced with steamed milk " +
+                        "and a light layer of foam. " +
+                        "A perfect milk-forward warm-up.",
+                R.drawable.dk_latte_1, 25);
         insertStuff(db, "DRINK","Cappuccino",
-                "Espresso, hot milk and steamed-milk foam", R.drawable.dk_cappuccino, 27);
-        insertStuff(db, "DRINK","Filter",
-                "Our best drip coffee", R.drawable.dk_filter, 22);
+                "Dark, rich espresso lies in wait under a smoothed " +
+                        "and stretched layer of thick milk foam. " +
+                        "An alchemy of barista artistry and craft.",
+                R.drawable.dk_cappuccino_1, 27);
+        insertStuff(db, "DRINK","Macchiato",
+                "Freshly steamed milk with vanilla-flavored syrup marked with espresso " +
+                        "and topped with a caramel drizzle for an oh-so-sweet finish.",
+                R.drawable.dk_macchiato_1, 26);
 
 
         /*

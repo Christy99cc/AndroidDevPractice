@@ -124,7 +124,7 @@ public class DrinkFragment extends Fragment {
                 SQLiteOpenHelper starbuzzDatabaseHelper = new StarbuzzDatabaseHelper(getActivity());
                 try (SQLiteDatabase db = starbuzzDatabaseHelper.getWritableDatabase()) {
                     // 根据主键更新
-                    int row = db.update("DRINK", drinkValues, "_id=?",
+                    int row = db.update(categoryName, drinkValues, "_id=?",
                             new String[]{Integer.toString(drinkId)});
                     Log.d("sqlite", "update row " + row);
                 } catch (SQLiteException e) {

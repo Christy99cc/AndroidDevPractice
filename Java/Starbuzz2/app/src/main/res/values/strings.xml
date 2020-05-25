@@ -17,4 +17,6 @@
     </string-array>
     <string name="favorite">Favorite</string>
     <string name="favorites">Your favorite drinks:</string>
+    <string name="add_to_cart">Add to Cart</string>
+    <string name="price">price</string>
 </resources>
