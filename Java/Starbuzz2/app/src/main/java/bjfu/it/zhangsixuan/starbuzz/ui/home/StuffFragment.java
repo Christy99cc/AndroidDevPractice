@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -25,15 +26,19 @@ import java.util.Objects;
 import bjfu.it.zhangsixuan.starbuzz.R;
 import bjfu.it.zhangsixuan.starbuzz.db.StarbuzzDatabaseHelper;
 
-public class DrinkFragment extends Fragment {
+import static bjfu.it.zhangsixuan.starbuzz.MainActivity.STUFF_TABLE;
 
-    static final String EXTRA_DRINKID = "drinkId";
-    private int drinkId;
-    private String categoryName;
+public class StuffFragment extends Fragment {
+
+    static final String EXTRA_STUFFID = "stuffId";
+
+    private int stuffId;
 
     private CheckBox cb_favorite;
 
     private TextView tv_price;
+
+    private Button btn_add_to_cart;
 
 
     @Nullable
@@ -43,16 +48,12 @@ public class DrinkFragment extends Fragment {
         //获取Bundle
         Bundle bundle = getArguments();
         assert bundle != null;
-        drinkId = bundle.getInt(EXTRA_DRINKID);
-        categoryName = bundle.getString(DrinkCategoryFragment.EXTRA_CATEGORY_NAME);
+        stuffId = bundle.getInt(EXTRA_STUFFID);
 
         View root = inflater.inflate(R.layout.fragment_drink, container, false);
-
         cb_favorite = root.findViewById(R.id.favorite);
-
         tv_price = root.findViewById(R.id.price);
-
-
+        btn_add_to_cart = root.findViewById(R.id.btn_add_to_cart);
 
         /*
          * 先实例化helper，再获取数据库引用
@@ -63,8 +64,8 @@ public class DrinkFragment extends Fragment {
          */
         try (SQLiteDatabase db = starbuzzDatabaseHelper.getReadableDatabase()) {
 
-            Log.d("debug", "drinkId:" + drinkId);
-            Cursor cursor = db.query(categoryName,
+            Log.d("debug", "stuffId:" + stuffId);
+            Cursor cursor = db.query(STUFF_TABLE,
                     new String[]{"NAME",
                             "DESCRIPTION",
                             "IMAGE_SOURCE_ID",
@@ -72,7 +73,7 @@ public class DrinkFragment extends Fragment {
                             "PRICE"
                     },
                     "_id=?",
-                    new String[]{Integer.toString(drinkId)},
+                    new String[]{Integer.toString(stuffId)},
                     null, null, null);
 
             if (cursor.moveToFirst()) {
@@ -100,7 +101,7 @@ public class DrinkFragment extends Fragment {
 
                 // 显示价格
                 Log.d("debug", "price:" + price);
-                tv_price.setText(""+ price);
+                tv_price.setText("" + price);
 
             }
             cursor.close();
@@ -122,9 +123,10 @@ public class DrinkFragment extends Fragment {
 
         //获取Bundle
         Bundle bundle = getArguments();
-        drinkId = bundle.getInt(EXTRA_DRINKID);
 
+        stuffId = bundle.getInt(EXTRA_STUFFID);
 
+        // 点击收藏 或者取消收藏
         cb_favorite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -135,14 +137,22 @@ public class DrinkFragment extends Fragment {
                 SQLiteOpenHelper starbuzzDatabaseHelper = new StarbuzzDatabaseHelper(getActivity());
                 try (SQLiteDatabase db = starbuzzDatabaseHelper.getWritableDatabase()) {
                     // 根据主键更新
-                    int row = db.update(categoryName, drinkValues, "_id=?",
-                            new String[]{Integer.toString(drinkId)});
+                    int row = db.update(STUFF_TABLE, drinkValues, "_id=?",
+                            new String[]{Integer.toString(stuffId)});
                     Log.d("sqlite", "update row " + row);
                 } catch (SQLiteException e) {
                     Log.d("sqlite", e.getMessage());
                     Toast.makeText(getActivity(), "Database unavailable", Toast.LENGTH_SHORT).show();
                 }
 
+            }
+        });
+
+        // 点击加入购物车按钮
+        btn_add_to_cart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 将现在的商品加入购物车
             }
         });
     }

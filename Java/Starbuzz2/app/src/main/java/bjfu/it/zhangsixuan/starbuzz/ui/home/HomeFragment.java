@@ -26,11 +26,12 @@ import java.util.Map;
 import bjfu.it.zhangsixuan.starbuzz.R;
 import bjfu.it.zhangsixuan.starbuzz.db.StarbuzzDatabaseHelper;
 
-import static bjfu.it.zhangsixuan.starbuzz.ui.home.DrinkCategoryFragment.EXTRA_CATEGORY_NAME;
+//import static bjfu.it.zhangsixuan.starbuzz.ui.home.DrinkCategoryFragment.EXTRA_CATEGORY_NAME;
 
 public class HomeFragment extends Fragment {
 
-    private String categoryName;
+//    private String categoryName;
+    private int categoryId;
 
 
     private static final ArrayList<String> tables = new ArrayList<String>();
@@ -57,25 +58,27 @@ public class HomeFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getActivity(), "click position:" + position, Toast.LENGTH_SHORT)
                         .show();
-                if (position == 0) { // Drinks
-                    categoryName = "DRINK";
-                } else if (position == 1) {
-                    categoryName = "FOOD";
-                } else if (position == 2) {
-                    categoryName = "STORE";
-                }
+//                if (position == 0) { // Drinks
+//                    categoryName = "DRINK";
+//                } else if (position == 1) {
+//                    categoryName = "FOOD";
+//                } else if (position == 2) {
+//                    categoryName = "STORE";
+//                }
+                categoryId = position;
 
                 //开启事务跳转
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                DrinkCategoryFragment drinkCategoryFragment = new DrinkCategoryFragment();
+                StuffCategoryFragment stuffCategoryFragment = new StuffCategoryFragment();
                 Bundle bundle = new Bundle();
-                bundle.putString(EXTRA_CATEGORY_NAME, categoryName);
-                drinkCategoryFragment.setArguments(bundle);
+//                bundle.putString(EXTRA_CATEGORY_NAME, categoryName);
+                bundle.putInt(StuffCategoryFragment.EXTRA_CATEGORY_ID, categoryId);
+                stuffCategoryFragment.setArguments(bundle);
 
                 transaction
                         .addToBackStack(null)  //将当前fragment加入到返回栈中
-                        .replace(R.id.nav_host_fragment, drinkCategoryFragment)
-                        .show(drinkCategoryFragment)
+                        .replace(R.id.nav_host_fragment, stuffCategoryFragment)
+                        .show(stuffCategoryFragment)
                         .commit();
             }
         };
@@ -87,7 +90,7 @@ public class HomeFragment extends Fragment {
         ListView listFavorites = view.findViewById(R.id.list_favorites);
 
         SimpleAdapter favoriteAdapter = new SimpleAdapter(getContext(), getData(),
-                R.layout.favorite_linear_layout,
+                R.layout.favorite_list_item_layout,
                 new String[]{"favorite_image", "favorite_name"},
                 new int[]{R.id.favorite_image, R.id.favorite_name});
         listFavorites.setAdapter(favoriteAdapter);

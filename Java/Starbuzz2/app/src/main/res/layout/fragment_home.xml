@@ -29,7 +29,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-
                 android:orientation="vertical">
 
                 <TextView
@@ -42,9 +41,6 @@
                     android:id="@+id/list_favorites"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-
-                    <!--            <include-->
-                    <!--                layout="@layout/favorite_linear_layout" />-->
                 </ListView>
             </LinearLayout>
         </ScrollView>
