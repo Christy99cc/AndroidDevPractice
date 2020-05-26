@@ -12,7 +12,7 @@ public class StarbuzzDatabaseHelper extends SQLiteOpenHelper {
 
 
     private static final String DB_NAME = "starbuzz.db";
-    private static final int DB_VERSION = 3;
+    private static final int DB_VERSION = 1;
 
     /*
      * 向父类构造函数传入数据库名称和版本
@@ -97,27 +97,20 @@ public class StarbuzzDatabaseHelper extends SQLiteOpenHelper {
                 R.drawable.st_wholebean_1, 56, 2);
 
 
+        /*
+         * 增加CART表
+         */
+        String sql_cart = "CREATE TABLE CART ( ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "STUFF_ID INTEGER," +
+                "NUMBER INTEGER," +
+                "FOREIGN KEY (STUFF_ID) REFERENCES parent(ID) ON DELETE CASCADE ON UPDATE CASCADE)";
+        db.execSQL(sql_cart);
     }
 
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        // 数据库版本升级到2，增加CART表
-        if (oldVersion <= 1) {
-            String sql_cart = "CREATE TABLE CART ( ID INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "STUFF_ID INTEGER," +
-                    "NUMBER INTEGER," +
-                    "FOREIGN KEY (STUFF_ID) REFERENCES parent(ID) ON DELETE CASCADE ON UPDATE CASCADE)";
-            db.execSQL(sql_cart);
-        }
-
-        if (oldVersion <= 2) {
-            // 数据库版本3，测试购物车用
-            insertStuffToCart(db, 1, 2);
-            insertStuffToCart(db, 2, 1);
-            insertStuffToCart(db, 5, 3);
-        }
     }
 
     private static void insertStuff(SQLiteDatabase db,

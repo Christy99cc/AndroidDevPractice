@@ -29,8 +29,9 @@ import io.sentry.android.AndroidSentryClientFactory;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
+import static bjfu.it.zhangsixuan.starbuzz.ui.home.StuffCategoryFragment.refreshCartNum;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity {
     public static final String STUFF_TABLE = "STUFF";
     public static final String CART_TABLE = "CART";
 
@@ -51,66 +52,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-        refreshCartNum();
+        // 购物车件数
+        refreshCartNum((TextView) findViewById(R.id.tv_num), this);
     }
 
-    // 购物车
-    public void refreshCartNum(){
-        TextView tv_num = findViewById(R.id.tv_num);
-        int num = getCartItemNum();
-        tv_num.setText(String.valueOf(num));
-        tv_num.setVisibility(num ==0 ? View.INVISIBLE: View.VISIBLE);
-    }
 
-    private List<Map<String, Object>> getCartNData() {
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-
-        Cursor cursor;
-        // map数据准备
-        SQLiteOpenHelper starbuzzDatabaseHelper = new StarbuzzDatabaseHelper(this);
-
-        try (SQLiteDatabase db = starbuzzDatabaseHelper.getReadableDatabase()) {
-
-            // 全部取出来
-            cursor = db.query(CART_TABLE, new String[]{"ID", "STUFF_ID", "NUMBER"}, null,
-                    null, null, null, null, null);
-
-            while (cursor.moveToNext()) {
-                // 添加
-                // 需要的是：cartId, stuffId, stuffName(display), stuffPrice, stuffImgId, stuffNumber
-                // 移动光标到下一行
-                Map<String, Object> map = new HashMap<String, Object>();
-
-                int cartId = cursor.getInt(cursor.getColumnIndex("ID"));
-                int stuffId = cursor.getInt(cursor.getColumnIndex("STUFF_ID"));
-                int stuffNumber = cursor.getInt(cursor.getColumnIndex("NUMBER"));
-                map.put("cartId", cartId);
-                map.put("stuffId", stuffId);
-                map.put("stuffNumber", stuffNumber);
-                list.add(map);
-            }
-
-        } catch (
-                SQLiteException e) {
-            Log.e("sqlite", Objects.requireNonNull(e.getMessage()));
-            makeText(this, "database unavailable", LENGTH_SHORT).show();
-        }
-        return list;
-    }
-
-    private int getCartItemNum(){
-        int numTol = 0;
-        List<Map<String, Object>> list = getCartNData();
-        for (Map<String, Object> map : list) {
-            numTol += (int)map.get("stuffNumber");
-        }
-        return numTol;
-    }
-
-    @Override
-    public void onClick(View v) {
-        /* 只要点击就刷新购物车数量
-         */
-        refreshCartNum();
-    }
 }

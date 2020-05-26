@@ -153,6 +153,7 @@ public class StuffFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // 将现在的商品加入购物车
+                StuffCategoryFragment.addToCart(stuffId, getActivity());
             }
         });
     }

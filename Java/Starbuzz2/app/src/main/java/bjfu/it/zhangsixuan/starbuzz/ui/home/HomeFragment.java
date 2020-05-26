@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import bjfu.it.zhangsixuan.starbuzz.R;
 import bjfu.it.zhangsixuan.starbuzz.db.StarbuzzDatabaseHelper;
@@ -33,7 +34,7 @@ import static bjfu.it.zhangsixuan.starbuzz.MainActivity.STUFF_TABLE;
 public class HomeFragment extends Fragment {
 
     private int categoryId;
-
+    private Cursor favoritesCursor;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -95,7 +96,7 @@ public class HomeFragment extends Fragment {
         try {
             SQLiteDatabase db = starbuzzDatabaseHelper.getReadableDatabase();
 
-            Cursor favoritesCursor = db.query(STUFF_TABLE,
+            favoritesCursor = db.query(STUFF_TABLE,
                     new String[]{"_id", "NAME", "IMAGE_SOURCE_ID"}, "FAVORITE=1",
                     null, null, null, null, null);
 
@@ -113,7 +114,7 @@ public class HomeFragment extends Fragment {
             }
 
         } catch (SQLiteException e) {
-            Log.d("sqlite", e.getMessage());
+            Log.d("sqlite", Objects.requireNonNull(e.getMessage()));
             Toast.makeText(getActivity(), "database unavailable", Toast.LENGTH_SHORT).show();
         }
 
