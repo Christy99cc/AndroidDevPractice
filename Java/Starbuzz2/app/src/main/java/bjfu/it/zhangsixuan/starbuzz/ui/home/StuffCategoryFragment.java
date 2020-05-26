@@ -113,7 +113,7 @@ public class StuffCategoryFragment extends Fragment {
 
         private LayoutInflater mInflater;
 
-        public MyAdapter(Context context) {
+        MyAdapter(Context context) {
             this.mInflater = LayoutInflater.from(context);
         }
 
@@ -143,7 +143,6 @@ public class StuffCategoryFragment extends Fragment {
 
                 holder = new ViewHolder();
 
-                // 这句修改成parent了
                 convertView = mInflater.inflate(R.layout.stuff_list_item_layout, null);
 
                 holder.tv_stuffId = (TextView) convertView.findViewById(R.id.stuff_id);
