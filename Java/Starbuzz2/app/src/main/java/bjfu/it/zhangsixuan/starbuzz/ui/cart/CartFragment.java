@@ -58,6 +58,9 @@ public class CartFragment extends Fragment {
             RVCartAdapter rvCartAdapter = new RVCartAdapter(mData);
             rv_cart.setLayoutManager(new LinearLayoutManager(getContext()));
             rv_cart.setAdapter(rvCartAdapter);
+
+            TextView tv_total_price = root.findViewById(R.id.total_price);
+            tv_total_price.setText(String.valueOf(getTotalPrice()));
         }
 
 
@@ -179,5 +182,16 @@ public class CartFragment extends Fragment {
             iv_add = itemView.findViewById(R.id.iv_add);
             tv_item_number = itemView.findViewById(R.id.tv_amount);
         }
+    }
+
+    // 计算mData的总价
+    private double getTotalPrice(){
+        double tol = 0;
+        for (Map<String, Object> mDatum : mData) {
+            double perPrice = (double) mDatum.get("stuffPrice");
+            int number = (int) mDatum.get("stuffNumber");
+            tol += perPrice * number;
+        }
+        return tol;
     }
 }
