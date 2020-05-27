@@ -45,6 +45,24 @@ public class Utils {
                 .commit();
     }
 
+    // 计算mData的总价
+    private static double getTotalPrice(List<Map<String, Object>> mData) {
+        double tol = 0;
+        for (Map<String, Object> mDatum : mData) {
+            double perPrice = (double) mDatum.get("stuffPrice");
+            int number = (int) mDatum.get("stuffNumber");
+            tol += perPrice * number;
+        }
+        return tol;
+    }
+
+    // 刷新购物车的总价
+    public static void refreshTotalPrice( TextView tv_total_price, List<Map<String, Object>> mData){
+        double tol = getTotalPrice(mData);
+        tv_total_price.setText(String.valueOf(tol));
+    }
+
+
     // 购物车
     public static void refreshCartNum(TextView tv_num, Context context){
 //        TextView tv_num = Objects.requireNonNull(getActivity().findViewById(R.id.tv_num);
@@ -98,8 +116,8 @@ public class Utils {
     }
 
 
-    // 添加一件商品到购物车，不含refresh
-    public static void addToCart(int stuffId, Context context){
+    // 添加一件商品到购物车，不含refresh RecycleView，但包括刷新下面的总数
+    public static void addOneToCart(int stuffId, Context context){
 
         Cursor cursor;
         SQLiteOpenHelper starbuzzDatabaseHelper = new StarbuzzDatabaseHelper(context);
@@ -134,6 +152,45 @@ public class Utils {
                 long result = db.update(CART_TABLE, contentValues, "ID=?",
                         new String[]{String.valueOf(cartId)});
                 Log.d("debug", "update " + CART_TABLE + " " + result);
+            }
+            refreshCartNum((TextView) ((FragmentActivity)context).findViewById(R.id.tv_num), context);
+        } catch (SQLiteException e) {
+            Log.e("sqlite", Objects.requireNonNull(e.getMessage()));
+            Toast.makeText(context,"database unavailable", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // 减少一件商品到购物车，最小为1，不能删除，不含refresh
+    public static void removeOneFromCart(int stuffId, Context context){
+
+        Cursor cursor;
+        SQLiteOpenHelper starbuzzDatabaseHelper = new StarbuzzDatabaseHelper(context);
+
+        try (SQLiteDatabase db = starbuzzDatabaseHelper.getReadableDatabase()) {
+
+            int oldNumber = 0;
+            int cartId = 0;
+
+            // 1. 查现在的number
+            cursor = db.query(CART_TABLE, new String[]{"ID", "NUMBER"}, "STUFF_ID=?",
+                    new String[]{String.valueOf(stuffId)},
+                    null, null, null, null);
+
+            if (cursor.moveToFirst()) { // 如果已经存在记录
+                oldNumber = cursor.getInt(cursor.getColumnIndex("NUMBER"));
+                cartId = cursor.getInt(cursor.getColumnIndex("ID"));
+
+                if (oldNumber > 1) {
+                    // 2. 准备数据
+                    ContentValues contentValues = new ContentValues();
+                    contentValues.put("STUFF_ID", stuffId);
+                    contentValues.put("NUMBER", oldNumber - 1);
+                    // 3.更新CART表
+                    // update
+                    long result = db.update(CART_TABLE, contentValues, "ID=?",
+                            new String[]{String.valueOf(cartId)});
+                    Log.d("debug", "update " + CART_TABLE + " " + result);
+                }
             }
             refreshCartNum((TextView) ((FragmentActivity)context).findViewById(R.id.tv_num), context);
         } catch (SQLiteException e) {

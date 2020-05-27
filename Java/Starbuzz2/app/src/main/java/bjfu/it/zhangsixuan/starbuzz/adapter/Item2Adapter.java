@@ -90,7 +90,7 @@ public class Item2Adapter extends BaseAdapter {
                 // 加入购物车
                 Log.d("debug", "加入购物车" + v.getTag());
                 int stuffId = (int) mData.get((Integer) v.getTag()).get("stuffId");
-                Utils.addToCart(stuffId, context);
+                Utils.addOneToCart(stuffId, context);
             }
         });
 

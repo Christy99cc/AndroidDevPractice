@@ -1,6 +1,7 @@
 package bjfu.it.zhangsixuan.starbuzz.adapter;
 
 
+import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,19 +9,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 import java.util.Map;
 
 import bjfu.it.zhangsixuan.starbuzz.R;
+import bjfu.it.zhangsixuan.starbuzz.ui.cart.CartFragment;
+import bjfu.it.zhangsixuan.starbuzz.utils.Utils;
 
 public class RVCartAdapter extends RecyclerView.Adapter {
 
     private List<Map<String, Object>> list;
+    private Context context;
+    private FragmentTransaction transaction;
 
-    public RVCartAdapter(List<Map<String, Object>> mData) {
+    public RVCartAdapter(List<Map<String, Object>> mData, Context context, FragmentTransaction transaction) {
         this.list = mData;
+        this.context = context;
+        this.transaction = transaction;
     }
 
     @NonNull
@@ -37,6 +46,13 @@ public class RVCartAdapter extends RecyclerView.Adapter {
         ((RViewHolder) holder).tv_item_name.setText((String) list.get(position).get("stuffName"));
         ((RViewHolder) holder).tv_item_price.setText(String.valueOf(list.get(position).get("stuffPrice")));
         ((RViewHolder) holder).tv_item_number.setText(String.valueOf(list.get(position).get("stuffNumber")));
+
+        ((RViewHolder) holder).iv_cart_img.setTag(position);
+        ((RViewHolder) holder).tv_item_name.setTag(position);
+        ((RViewHolder) holder).iv_add.setTag(position);
+        ((RViewHolder) holder).iv_reduce.setTag(position);
+
+
         // +\- 采用默认即可
 
         // 点击事件
@@ -44,7 +60,50 @@ public class RVCartAdapter extends RecyclerView.Adapter {
         ((RViewHolder) holder).iv_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("debug", "点击了position 的+号");
+                Log.e("debug", "点击了position" + v.getTag() + "的+号");
+                int stuffId = (int) list.get((Integer) v.getTag()).get("stuffId");
+                Utils.addOneToCart(stuffId, context);
+                // Attention: 刷新购物车
+                list = CartFragment.getData(context);
+                onBindViewHolder(holder, (Integer) v.getTag());
+                // 刷新总价
+                Utils.refreshTotalPrice(((FragmentActivity) context).findViewById(R.id.total_price), list);
+            }
+        });
+
+        // 点击事件
+        // -
+        ((RViewHolder) holder).iv_reduce.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("debug", "点击了position" + v.getTag() + "的+号");
+                int stuffId = (int) list.get((Integer) v.getTag()).get("stuffId");
+                Utils.removeOneFromCart(stuffId, context);
+                // Attention: 刷新购物车
+                list = CartFragment.getData(context);
+                onBindViewHolder(holder, (Integer) v.getTag());
+                // 刷新总价
+                Utils.refreshTotalPrice(((FragmentActivity) context).findViewById(R.id.total_price), list);
+            }
+        });
+
+        // 点击事件
+        // details
+        ((RViewHolder) holder).iv_cart_img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("debug", "点击了position" + v.getTag() + " 的img");
+                int stuffId = (int) list.get((Integer) v.getTag()).get("stuffId");
+                Utils.toDetailFragment(stuffId, transaction);
+            }
+        });
+
+        ((RViewHolder) holder).tv_item_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("debug", "点击了position" + v.getTag() + " 的name");
+                int stuffId = (int) list.get((Integer) v.getTag()).get("stuffId");
+                Utils.toDetailFragment(stuffId, transaction);
             }
         });
     }
