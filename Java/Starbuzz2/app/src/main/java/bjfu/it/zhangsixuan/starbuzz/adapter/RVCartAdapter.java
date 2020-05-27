@@ -17,7 +17,7 @@ import bjfu.it.zhangsixuan.starbuzz.R;
 
 public class RVCartAdapter extends RecyclerView.Adapter {
 
-    List<Map<String, Object>> list;
+    private List<Map<String, Object>> list;
 
     public RVCartAdapter(List<Map<String, Object>> mData) {
         this.list = mData;
@@ -54,7 +54,7 @@ public class RVCartAdapter extends RecyclerView.Adapter {
         return list.size();
     }
 
-    class RViewHolder extends RecyclerView.ViewHolder {
+    static final class RViewHolder extends RecyclerView.ViewHolder {
 
         ImageView iv_cart_img;  // 图片
         TextView tv_item_name;  // 名字

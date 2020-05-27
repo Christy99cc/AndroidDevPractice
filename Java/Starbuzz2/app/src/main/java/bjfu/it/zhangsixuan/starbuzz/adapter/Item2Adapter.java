@@ -1,13 +1,11 @@
 package bjfu.it.zhangsixuan.starbuzz.adapter;
 
 import android.content.Context;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.FragmentTransaction;
@@ -19,25 +17,24 @@ import bjfu.it.zhangsixuan.starbuzz.R;
 import bjfu.it.zhangsixuan.starbuzz.utils.Utils;
 
 
-public class ItemAdapter extends BaseAdapter {
 
-    static final class ItemViewHolder {
-        ImageView iv_item;
-        TextView tv_item;
-        TextView tv_item_id;
+public class Item2Adapter extends BaseAdapter {
+    static final class ViewHolder {
+        TextView tv_stuffId;
+        TextView tv_stuffName;
+        TextView tv_add_to_cart;
     }
 
-
-    private LayoutInflater mInflater;
     private List<Map<String, Object>> mData;
+    private LayoutInflater mInflater;
     private FragmentTransaction transaction;
+    private Context context;
 
-
-    public ItemAdapter(Context context, List<Map<String, Object>> mData,
-                       FragmentTransaction transaction) {
+    public Item2Adapter(Context context, List<Map<String, Object>> mData, FragmentTransaction transaction) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = mData;
         this.transaction = transaction;
+        this.context =context;
     }
 
     @Override
@@ -61,51 +58,49 @@ public class ItemAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        ItemViewHolder holder = null;
+        ViewHolder holder = null;
         if (convertView == null) {
 
-            holder = new ItemViewHolder();
+            holder = new ViewHolder();
 
-            convertView = mInflater.inflate(R.layout.item_layout, null);
+            convertView = mInflater.inflate(R.layout.stuff_list_item_layout, null);
 
-            holder.iv_item = convertView.findViewById(R.id.iv_item);
-            holder.tv_item = convertView.findViewById(R.id.tv_item);
-            holder.tv_item_id = convertView.findViewById(R.id.tv_item_id);
+            holder.tv_stuffId = convertView.findViewById(R.id.stuff_id);
+            holder.tv_stuffName = convertView.findViewById(R.id.stuff_name);
+            holder.tv_add_to_cart = convertView.findViewById(R.id.tv_add_to_cart);
             convertView.setTag(holder);
 
         } else {
-            holder = (ItemViewHolder) convertView.getTag();
+
+            holder = (ViewHolder) convertView.getTag();
         }
 
 
-        holder.iv_item.setImageResource((int) mData.get(position).get("favorite_image"));
-        holder.tv_item.setText((String) mData.get(position).get("favorite_name"));
+        holder.tv_stuffName.setText((String) mData.get(position).get("stuffName"));
+        holder.tv_stuffId.setText(String.valueOf(mData.get(position).get("stuffId")));
 
-        holder.iv_item.setTag(position);
-        holder.tv_item.setTag(position);
+        holder.tv_stuffName.setTag(position);
+        holder.tv_add_to_cart.setTag(position);
 
 
-        holder.tv_item.setOnClickListener(new View.OnClickListener() {
+        holder.tv_add_to_cart.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-
-                Log.d("debug", "进入详情页面" + v.getTag());
-                int stuffId = (int) mData.get((Integer) v.getTag()).get("favorite_id");
-                //TODO 进入详情
-                Utils.toDetailFragment(stuffId, transaction);
-
+                // 加入购物车
+                Log.d("debug", "加入购物车" + v.getTag());
+                int stuffId = (int) mData.get((Integer) v.getTag()).get("stuffId");
+                Utils.addToCart(stuffId, context);
             }
         });
 
-        holder.iv_item.setOnClickListener(new View.OnClickListener() {
+        holder.tv_stuffName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // 进入详情页面
                 Log.d("debug", "进入详情页面" + v.getTag());
-                int stuffId = (int) mData.get((Integer) v.getTag()).get("favorite_id");
-
                 //开启事务跳转
+                int stuffId = (int) mData.get((Integer) v.getTag()).get("stuffId");
                 Utils.toDetailFragment(stuffId, transaction);
             }
 
@@ -113,4 +108,3 @@ public class ItemAdapter extends BaseAdapter {
         return convertView;
     }
 }
-
