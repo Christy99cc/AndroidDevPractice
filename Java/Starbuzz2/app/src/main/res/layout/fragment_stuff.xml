@@ -13,9 +13,9 @@
 
         <ImageView
             android:id="@+id/photo"
-            android:layout_width="190dp"
-            android:layout_height="190dp"
-            app:srcCompat="@drawable/starbuzz_logo" />
+            android:layout_width="match_parent"
+            android:layout_height="410dp"
+            app:srcCompat="@drawable/dk_cappuccino_1" />
 
         <TextView
             android:id="@+id/name"

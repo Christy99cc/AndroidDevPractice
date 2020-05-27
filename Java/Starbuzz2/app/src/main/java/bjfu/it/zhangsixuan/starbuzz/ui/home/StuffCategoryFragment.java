@@ -1,6 +1,5 @@
 package bjfu.it.zhangsixuan.starbuzz.ui.home;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -10,9 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,7 +26,6 @@ import java.util.Objects;
 import bjfu.it.zhangsixuan.starbuzz.R;
 import bjfu.it.zhangsixuan.starbuzz.adapter.Item2Adapter;
 import bjfu.it.zhangsixuan.starbuzz.db.StarbuzzDatabaseHelper;
-import bjfu.it.zhangsixuan.starbuzz.utils.Utils;
 
 import static bjfu.it.zhangsixuan.starbuzz.MainActivity.STUFF_TABLE;
 
@@ -41,7 +37,7 @@ public class StuffCategoryFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_drink_category, container, false);
+        View root = inflater.inflate(R.layout.fragment_stuff_category, container, false);
 
         ListView listDrinks = root.findViewById(R.id.list_drinks);
         List<Map<String, Object>> mData =  getData();

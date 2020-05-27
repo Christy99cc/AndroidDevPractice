@@ -51,7 +51,7 @@ public class StuffFragment extends Fragment {
         assert bundle != null;
         stuffId = bundle.getInt(EXTRA_STUFFID);
 
-        View root = inflater.inflate(R.layout.fragment_drink, container, false);
+        View root = inflater.inflate(R.layout.fragment_stuff, container, false);
         cb_favorite = root.findViewById(R.id.favorite);
         tv_price = root.findViewById(R.id.price);
         btn_add_to_cart = root.findViewById(R.id.btn_add_to_cart);
