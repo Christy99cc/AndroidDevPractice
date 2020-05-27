@@ -1,11 +1,11 @@
 package bjfu.it.zhangsixuan.starbuzz.bean;
 
-public class BannerBean {
+public class DataBean {
     private int imageRes;
     private int id;
     private String name;
 
-    public BannerBean(int id, String name, int imageRes) {
+    public DataBean(int id, String name, int imageRes) {
         this.imageRes = imageRes;
         this.id = id;
         this.name = name;

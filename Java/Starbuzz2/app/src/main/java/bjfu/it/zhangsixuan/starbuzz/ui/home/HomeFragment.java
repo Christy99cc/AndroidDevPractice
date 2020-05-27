@@ -19,12 +19,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.youth.banner.Banner;
 import com.youth.banner.indicator.CircleIndicator;
-import com.youth.banner.listener.OnBannerListener;
-import com.youth.banner.util.BannerUtils;
-import com.youth.banner.util.LogUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,9 +29,9 @@ import java.util.Map;
 import java.util.Objects;
 
 import bjfu.it.zhangsixuan.starbuzz.R;
-import bjfu.it.zhangsixuan.starbuzz.adapter.ImageAdapter;
+import bjfu.it.zhangsixuan.starbuzz.adapter.ImageTitleAdapter;
 import bjfu.it.zhangsixuan.starbuzz.adapter.ItemAdapter;
-import bjfu.it.zhangsixuan.starbuzz.bean.BannerBean;
+import bjfu.it.zhangsixuan.starbuzz.bean.DataBean;
 import bjfu.it.zhangsixuan.starbuzz.db.StarbuzzDatabaseHelper;
 import bjfu.it.zhangsixuan.starbuzz.utils.Utils;
 
@@ -47,12 +43,12 @@ public class HomeFragment extends Fragment {
     private int categoryId;
     Cursor cursor;
 
-    private static List<BannerBean> BANNER_ITEMS = new ArrayList<BannerBean>() {
+    private static List<DataBean> BANNER_ITEMS = new ArrayList<DataBean>() {
         {
-            add(new BannerBean(1, "Latte", R.drawable.dk_latte_1));
-            add(new BannerBean(2, "Cappuccino", R.drawable.dk_cappuccino_1));
-            add(new BannerBean(3, "Macchiato", R.drawable.dk_macchiato_1));
-            add(new BannerBean(4, "Sandwich", R.drawable.fd_sandwich_1));
+            add(new DataBean(1, "Latte", R.drawable.dk_latte_1));
+            add(new DataBean(2, "Cappuccino", R.drawable.dk_cappuccino_1));
+            add(new DataBean(3, "Macchiato", R.drawable.dk_macchiato_1));
+            add(new DataBean(4, "Sandwich", R.drawable.fd_sandwich_1));
         }
     };
 
@@ -156,12 +152,12 @@ public class HomeFragment extends Fragment {
         final Banner banner = view.findViewById(R.id.banner);
         //--------------------------简单使用-------------------------------
         banner.addBannerLifecycleObserver(this)//添加生命周期观察者
-                .setAdapter(new ImageAdapter(BANNER_ITEMS))
+                .setAdapter(new ImageTitleAdapter(BANNER_ITEMS))
                 .setIndicator(new CircleIndicator(getActivity()))
                 .setUserInputEnabled(true);
 
         banner.setOnBannerListener((data, position) -> {
-            int stuffId = ((BannerBean) data).getId();
+            int stuffId = ((DataBean) data).getId();
             //开启事务跳转
             assert getFragmentManager() != null;
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
