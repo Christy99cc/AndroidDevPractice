@@ -12,10 +12,16 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <ImageView
+        <!--        <ImageView-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="153dp"-->
+        <!--            android:src="@drawable/ad1" />-->
+        <!-- 主题图片 -->
+
+        <com.youth.banner.Banner
+            android:id="@+id/banner"
             android:layout_width="match_parent"
-            android:layout_height="153dp"
-            android:src="@drawable/ad1" />
+            android:layout_height="150dp" />
 
         <ListView
             android:id="@+id/list_options"

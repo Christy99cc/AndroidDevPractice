@@ -19,6 +19,10 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.youth.banner.Banner;
+import com.youth.banner.indicator.CircleIndicator;
+import com.youth.banner.listener.OnBannerListener;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,8 +30,11 @@ import java.util.Map;
 import java.util.Objects;
 
 import bjfu.it.zhangsixuan.starbuzz.R;
+import bjfu.it.zhangsixuan.starbuzz.adapter.ImageAdapter;
 import bjfu.it.zhangsixuan.starbuzz.adapter.ItemAdapter;
+import bjfu.it.zhangsixuan.starbuzz.bean.BannerBean;
 import bjfu.it.zhangsixuan.starbuzz.db.StarbuzzDatabaseHelper;
+import bjfu.it.zhangsixuan.starbuzz.utils.Utils;
 
 import static bjfu.it.zhangsixuan.starbuzz.MainActivity.STUFF_TABLE;
 
@@ -35,11 +42,29 @@ import static bjfu.it.zhangsixuan.starbuzz.MainActivity.STUFF_TABLE;
 public class HomeFragment extends Fragment {
 
     private int categoryId;
-    Cursor favoritesCursor;
+    Cursor cursor;
+
+    private static List<BannerBean> BANNER_ITEMS = new ArrayList<BannerBean>() {
+        {
+            add(new BannerBean(1, "Latte", R.drawable.dk_latte_1));
+            add(new BannerBean(2, "Cappuccino", R.drawable.dk_cappuccino_1));
+            add(new BannerBean(3, "Macchiato", R.drawable.dk_macchiato_1));
+            add(new BannerBean(4, "Sandwich", R.drawable.fd_sandwich_1));
+        }
+    };
+
+    public static List<String> titles = new ArrayList<String>(){{
+        add("Latte");
+        add("Cappuccino");
+        add("Macchiato");
+        add("Sandwich");
+    }};
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
+
+        initView(root);
 
         final ListView listView = root.findViewById(R.id.list_options);
 
@@ -76,7 +101,7 @@ public class HomeFragment extends Fragment {
     private void setupFavoritesGridView(View view) {
         GridView gv_fav = view.findViewById(R.id.gv_fav);
 
-        List<Map<String, Object>> mapList = getData();
+        List<Map<String, Object>> mapList = getFavData();
         TextView textView = view.findViewById(R.id.favorite_label);
         if (mapList.size() == 0) {// 不显示favorite字样
             textView.setVisibility(View.INVISIBLE);
@@ -89,24 +114,24 @@ public class HomeFragment extends Fragment {
         gv_fav.setAdapter(favAdapter);
     }
 
-    private List<Map<String, Object>> getData() {
+    private List<Map<String, Object>> getFavData() {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         SQLiteOpenHelper starbuzzDatabaseHelper = new StarbuzzDatabaseHelper(getActivity());
         try {
             SQLiteDatabase db = starbuzzDatabaseHelper.getReadableDatabase();
 
-            favoritesCursor = db.query(STUFF_TABLE,
+            cursor = db.query(STUFF_TABLE,
                     new String[]{"_id", "NAME", "IMAGE_SOURCE_ID"}, "FAVORITE=1",
                     null, null, null, null, null);
 
             // 添加
-            while (favoritesCursor.moveToNext()) {
+            while (cursor.moveToNext()) {
                 // 移动光标到下一行
                 Map<String, Object> hashMap = new HashMap<String, Object>();
 
-                int favId = favoritesCursor.getInt(favoritesCursor.getColumnIndex("_id"));
-                String name = favoritesCursor.getString(favoritesCursor.getColumnIndex("NAME"));
-                int imageId = favoritesCursor.getInt(favoritesCursor.getColumnIndex("IMAGE_SOURCE_ID"));
+                int favId = cursor.getInt(cursor.getColumnIndex("_id"));
+                String name = cursor.getString(cursor.getColumnIndex("NAME"));
+                int imageId = cursor.getInt(cursor.getColumnIndex("IMAGE_SOURCE_ID"));
 
                 hashMap.put("favorite_id", favId);
                 hashMap.put("favorite_name", name);
@@ -122,5 +147,56 @@ public class HomeFragment extends Fragment {
         return list;
     }
 
+
+    private void initView(View view) {
+
+        Banner banner = view.findViewById(R.id.banner);
+        //--------------------------简单使用-------------------------------
+        banner.addBannerLifecycleObserver(this)//添加生命周期观察者
+                .setAdapter(new ImageAdapter(BANNER_ITEMS))
+                .setIndicator(new CircleIndicator(getActivity()))
+                .setUserInputEnabled(true);
+
+//        banner.setOnBannerListener(new OnBannerListener() {
+//            @Override
+//            public void OnBannerClick(Object data, int position) {
+//                int stuffId = ((BannerBean) data).getId();
+//                //开启事务跳转
+//                assert getFragmentManager() != null;
+//                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+//                Utils.toDetailFragment(stuffId, transaction);
+//            }
+//        });
+
+        banner.start();
+
+    }
+
+//    private List<BannerBean> getBannerData() {
+//        List<BannerBean>list = new ArrayList<>();
+//
+//        SQLiteOpenHelper starbuzzDatabaseHelper = new StarbuzzDatabaseHelper(getActivity());
+//        try {
+//            SQLiteDatabase db = starbuzzDatabaseHelper.getReadableDatabase();
+//
+//            cursor = db.query(STUFF_TABLE,
+//                    new String[]{"_id", "NAME", "IMAGE_SOURCE_ID"}, "CATEGORY=0",
+//                    null, null, null, null, null);
+//
+//            // 添加
+//            while (cursor.moveToNext()) {
+//                // 移动光标到下一行
+//                int id = cursor.getInt(cursor.getColumnIndex("_id"));
+//                String name = cursor.getString(cursor.getColumnIndex("NAME"));
+//                int imageId = cursor.getInt(cursor.getColumnIndex("IMAGE_SOURCE_ID"));
+//                BannerBean bannerBean = new BannerBean(id, name, imageId);
+//                list.add(bannerBean);
+//            }
+//
+//        } catch (SQLiteException e) {
+//            Log.d("debug", Objects.requireNonNull(e.getMessage()));
+//        }
+//        return list;
+//    }
 
 }
