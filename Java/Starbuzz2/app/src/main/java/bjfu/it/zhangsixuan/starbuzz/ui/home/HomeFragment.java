@@ -19,9 +19,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.youth.banner.Banner;
 import com.youth.banner.indicator.CircleIndicator;
 import com.youth.banner.listener.OnBannerListener;
+import com.youth.banner.util.BannerUtils;
+import com.youth.banner.util.LogUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -150,23 +153,20 @@ public class HomeFragment extends Fragment {
 
     private void initView(View view) {
 
-        Banner banner = view.findViewById(R.id.banner);
+        final Banner banner = view.findViewById(R.id.banner);
         //--------------------------简单使用-------------------------------
         banner.addBannerLifecycleObserver(this)//添加生命周期观察者
                 .setAdapter(new ImageAdapter(BANNER_ITEMS))
                 .setIndicator(new CircleIndicator(getActivity()))
                 .setUserInputEnabled(true);
 
-//        banner.setOnBannerListener(new OnBannerListener() {
-//            @Override
-//            public void OnBannerClick(Object data, int position) {
-//                int stuffId = ((BannerBean) data).getId();
-//                //开启事务跳转
-//                assert getFragmentManager() != null;
-//                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-//                Utils.toDetailFragment(stuffId, transaction);
-//            }
-//        });
+        banner.setOnBannerListener((data, position) -> {
+            int stuffId = ((BannerBean) data).getId();
+            //开启事务跳转
+            assert getFragmentManager() != null;
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            Utils.toDetailFragment(stuffId, transaction);
+        });
 
         banner.start();
 
