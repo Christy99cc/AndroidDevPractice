@@ -260,7 +260,7 @@ public class StuffCategoryFragment extends Fragment {
 
 
     // 添加一件商品到购物车，不含refresh
-    public static void addToCart(int stuffId, Context context){
+    static void addToCart(int stuffId, Context context){
 
         Cursor cursor;
         SQLiteOpenHelper starbuzzDatabaseHelper = new StarbuzzDatabaseHelper(context);

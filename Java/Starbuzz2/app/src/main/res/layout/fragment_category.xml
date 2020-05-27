@@ -1,10 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.category.CategoryFragment">
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical">
+
+          <TextView
+              android:id="@+id/category_drink_label"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="10dp"
+              android:text="Drink:" />
+
+
+          <GridView
+              android:id="@+id/gv_category_drink"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:columnWidth="90dp"
+              android:horizontalSpacing="10dp"
+              android:numColumns="3"
+              android:stretchMode="columnWidth"
+              android:verticalSpacing="10dp" />
+      </LinearLayout>
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical">
+
+          <TextView
+              android:id="@+id/category_food_label"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="10dp"
+              android:text="Food:" />
+
+
+          <GridView
+              android:id="@+id/gv_fav"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:columnWidth="90dp"
+              android:horizontalSpacing="10dp"
+              android:numColumns="3"
+              android:stretchMode="columnWidth"
+              android:verticalSpacing="10dp" />
+      </LinearLayout>
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical">
+
+          <TextView
+              android:id="@+id/category_store_label"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="10dp"
+              android:text="Store:" />
+
+
+          <GridView
+              android:id="@+id/gv_category_store"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:columnWidth="90dp"
+              android:horizontalSpacing="10dp"
+              android:numColumns="3"
+              android:stretchMode="columnWidth"
+              android:verticalSpacing="10dp" />
+      </LinearLayout>
+
+
+</LinearLayout>
