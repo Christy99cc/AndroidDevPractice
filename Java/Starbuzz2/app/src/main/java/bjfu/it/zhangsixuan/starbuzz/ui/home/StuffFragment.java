@@ -25,12 +25,13 @@ import java.util.Objects;
 
 import bjfu.it.zhangsixuan.starbuzz.R;
 import bjfu.it.zhangsixuan.starbuzz.db.StarbuzzDatabaseHelper;
+import bjfu.it.zhangsixuan.starbuzz.utils.Utils;
 
 import static bjfu.it.zhangsixuan.starbuzz.MainActivity.STUFF_TABLE;
 
 public class StuffFragment extends Fragment {
 
-    static final String EXTRA_STUFFID = "stuffId";
+    public static final String EXTRA_STUFFID = "stuffId";
 
     private int stuffId;
 
@@ -153,7 +154,7 @@ public class StuffFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // 将现在的商品加入购物车
-                StuffCategoryFragment.addToCart(stuffId, getActivity());
+                Utils.addToCart(stuffId, getActivity());
             }
         });
     }

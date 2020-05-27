@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -24,8 +23,8 @@ import java.util.Map;
 import java.util.Objects;
 
 import bjfu.it.zhangsixuan.starbuzz.R;
+import bjfu.it.zhangsixuan.starbuzz.adapter.ItemAdapter;
 import bjfu.it.zhangsixuan.starbuzz.db.StarbuzzDatabaseHelper;
-import bjfu.it.zhangsixuan.starbuzz.ui.home.HomeFragment;
 
 import static bjfu.it.zhangsixuan.starbuzz.MainActivity.STUFF_TABLE;
 
@@ -63,9 +62,9 @@ public class CategoryFragment extends Fragment {
         assert getFragmentManager() != null;
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
-        HomeFragment.FavAdapter dkAdapter = new HomeFragment.FavAdapter(getContext(), mDkData, transaction);
-        HomeFragment.FavAdapter fdAdapter = new HomeFragment.FavAdapter(getContext(), mFdData, transaction);
-        HomeFragment.FavAdapter stAdapter = new HomeFragment.FavAdapter(getContext(), mStData, transaction);
+        ItemAdapter dkAdapter = new ItemAdapter(getContext(), mDkData, transaction);
+        ItemAdapter fdAdapter = new ItemAdapter(getContext(), mFdData, transaction);
+        ItemAdapter stAdapter = new ItemAdapter(getContext(), mStData, transaction);
 
         gv_dk.setAdapter(dkAdapter);
         gv_fd.setAdapter(fdAdapter);
