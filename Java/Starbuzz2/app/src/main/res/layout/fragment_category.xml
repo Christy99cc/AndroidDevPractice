@@ -46,7 +46,7 @@
 
 
           <GridView
-              android:id="@+id/gv_fav"
+              android:id="@+id/gv_category_food"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:columnWidth="90dp"

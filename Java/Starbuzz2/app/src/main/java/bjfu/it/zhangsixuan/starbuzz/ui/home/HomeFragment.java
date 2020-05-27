@@ -15,7 +15,6 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,8 +36,6 @@ import static bjfu.it.zhangsixuan.starbuzz.MainActivity.STUFF_TABLE;
 
 public class HomeFragment extends Fragment {
 
-    private List<Map<String, Object>> mData;
-
     private int categoryId;
     private Cursor favoritesCursor;
 
@@ -49,7 +46,7 @@ public class HomeFragment extends Fragment {
         final ListView listView = root.findViewById(R.id.list_options);
 
         // favorite
-        setupFavoritesListView(root);
+        setupFavoritesGridView(root);
 
         // 为listView注册单击监听器
         AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
@@ -78,8 +75,7 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
-    private void setupFavoritesListView(View view) {
-//        ListView listFavorites = view.findViewById(R.id.list_favorites);
+    private void setupFavoritesGridView(View view) {
         GridView gv_fav = view.findViewById(R.id.gv_fav);
 
         List<Map<String, Object>> mapList = getData();
@@ -89,13 +85,9 @@ public class HomeFragment extends Fragment {
         } else {
             textView.setVisibility(View.VISIBLE);
         }
-//        SimpleAdapter favoriteAdapter = new SimpleAdapter(getContext(), getData(),
-//                R.layout.fav_item_layout,
-//                new String[]{"favorite_image", "favorite_name"},
-//                new int[]{R.id.favorite_image, R.id.favorite_name});
-//        listFavorites.setAdapter(favoriteAdapter);
-        mData = getData();
-        FavAdapter favAdapter = new FavAdapter(getContext());
+        assert getFragmentManager() != null;
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        FavAdapter favAdapter = new FavAdapter(getContext(), mapList, transaction);
         gv_fav.setAdapter(favAdapter);
     }
 
@@ -138,13 +130,19 @@ public class HomeFragment extends Fragment {
         TextView tv_fav_item_id;
     }
 
-    public class FavAdapter extends BaseAdapter {
+    public static class FavAdapter extends BaseAdapter {
 
 
         private LayoutInflater mInflater;
+        private List<Map<String, Object>> mData;
+        private FragmentTransaction transaction;
 
-        FavAdapter(Context context) {
+
+        public FavAdapter(Context context, List<Map<String, Object>> mData,
+                          FragmentTransaction transaction) {
             this.mInflater = LayoutInflater.from(context);
+            this.mData = mData;
+            this.transaction = transaction;
         }
 
         @Override
@@ -186,7 +184,7 @@ public class HomeFragment extends Fragment {
 
 
             holder.iv_fav_item.setImageResource((int) mData.get(position).get("favorite_image"));
-            holder.tv_fav_item.setText((String)mData.get(position).get("favorite_name"));
+            holder.tv_fav_item.setText((String) mData.get(position).get("favorite_name"));
 
             holder.iv_fav_item.setTag(position);
             holder.tv_fav_item.setTag(position);
@@ -200,7 +198,7 @@ public class HomeFragment extends Fragment {
                     Log.d("debug", "进入详情页面" + v.getTag());
                     int stuffId = (int) mData.get((Integer) v.getTag()).get("favorite_id");
                     //TODO 进入详情
-                    toDetailFragment(stuffId);
+                    toDetailFragment(stuffId, transaction);
 
                 }
             });
@@ -213,7 +211,7 @@ public class HomeFragment extends Fragment {
                     int stuffId = (int) mData.get((Integer) v.getTag()).get("favorite_id");
 
                     //开启事务跳转
-                    toDetailFragment(stuffId);
+                    toDetailFragment(stuffId, transaction);
                 }
 
             });
@@ -221,10 +219,10 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void toDetailFragment(int stuffId){
+    static void toDetailFragment(int stuffId, FragmentTransaction transaction) {
         //开启事务跳转
-        assert getFragmentManager() != null;
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+//        assert getFragmentManager() != null;
+//        FragmentTransaction transaction = getFragmentManager().beginTransaction();
         StuffFragment stuffFragment = new StuffFragment();
         Bundle bundle = new Bundle();
 
