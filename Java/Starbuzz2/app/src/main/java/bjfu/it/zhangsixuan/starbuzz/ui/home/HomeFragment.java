@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,7 +54,7 @@ public class HomeFragment extends Fragment {
         }
     };
 
-    public static List<String> titles = new ArrayList<String>(){{
+    public static List<String> titles = new ArrayList<String>() {{
         add("Latte");
         add("Cappuccino");
         add("Macchiato");
@@ -66,7 +68,7 @@ public class HomeFragment extends Fragment {
         initView(root);
 
         final ListView listView = root.findViewById(R.id.list_options);
-
+        setListViewHeightBasedOnChildren(listView);
         // favorite
         setupFavoritesGridView(root);
 
@@ -111,6 +113,7 @@ public class HomeFragment extends Fragment {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         ItemAdapter favAdapter = new ItemAdapter(getContext(), mapList, transaction);
         gv_fav.setAdapter(favAdapter);
+        setGridViewHeightBasedOnChildren(view, gv_fav);
     }
 
     private List<Map<String, Object>> getFavData() {
@@ -166,6 +169,57 @@ public class HomeFragment extends Fragment {
 
         banner.start();
 
+    }
+
+    /*
+     * 动态修改ListView的高度
+     */
+    public void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+
+        int tolHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            tolHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = tolHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+    }
+
+
+    /*
+     * 动态修改GridView的高度
+     */
+    public void setGridViewHeightBasedOnChildren(View view, GridView gridView) {
+        ListAdapter listAdapter = gridView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+
+        int tolHeight = 0;
+//
+//        0 0;
+//        1 1;
+//        2 1;
+//        3 1;
+//        4 2;
+
+        int num = (int) (Math.ceil(listAdapter.getCount() / 3.0));
+        for (int i = 0; i < num; i++) {
+            View listItem = listAdapter.getView(i, null, gridView);
+            listItem.measure(0, 0);
+            tolHeight += listItem.getMeasuredHeight() + 15;
+        }
+
+        ViewGroup.LayoutParams params = gridView.getLayoutParams();
+        params.height = tolHeight;
+        gridView.setLayoutParams(params);
     }
 
 //    private List<BannerBean> getBannerData() {
