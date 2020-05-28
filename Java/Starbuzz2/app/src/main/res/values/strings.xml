@@ -18,5 +18,6 @@
     <string name="favorite">Favorite</string>
     <string name="favorites">Your favorite drinks:</string>
     <string name="add_to_cart">Add to Cart</string>
-    <string name="price">price</string>
+    <string name="price">¥</string>
+    <string name="description_example">This delicious muffin is dotted throughout with sweet, juicy blueberries and a hint of lemon and dusted on top with sugar for a delightfully crunchy texture.</string>
 </resources>
