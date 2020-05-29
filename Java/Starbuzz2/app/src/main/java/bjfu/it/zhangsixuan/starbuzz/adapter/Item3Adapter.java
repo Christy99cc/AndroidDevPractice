@@ -19,12 +19,11 @@ import bjfu.it.zhangsixuan.starbuzz.R;
 import bjfu.it.zhangsixuan.starbuzz.utils.Utils;
 
 
-public class ItemAdapter extends BaseAdapter {
+public class Item3Adapter extends BaseAdapter {
 
     static final class ItemViewHolder {
-        ImageView iv_item;
-        TextView tv_item;
-        TextView tv_item_id;
+        ImageView iv_item_category;
+        TextView tv_item_category;
     }
 
 
@@ -33,7 +32,7 @@ public class ItemAdapter extends BaseAdapter {
     private FragmentTransaction transaction;
 
 
-    public ItemAdapter(Context context, List<Map<String, Object>> mData,
+    public Item3Adapter(Context context, List<Map<String, Object>> mData,
                        FragmentTransaction transaction) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = mData;
@@ -63,11 +62,10 @@ public class ItemAdapter extends BaseAdapter {
 
             holder = new ItemViewHolder();
 
-            convertView = mInflater.inflate(R.layout.item_layout, null);
+            convertView = mInflater.inflate(R.layout.item_category_layout, null);
 
-            holder.iv_item = convertView.findViewById(R.id.iv_item);
-            holder.tv_item = convertView.findViewById(R.id.tv_item);
-            holder.tv_item_id = convertView.findViewById(R.id.tv_item_id);
+            holder.iv_item_category = convertView.findViewById(R.id.iv_item_category);
+            holder.tv_item_category = convertView.findViewById(R.id.tv_item_category);
             convertView.setTag(holder);
 
         } else {
@@ -75,34 +73,29 @@ public class ItemAdapter extends BaseAdapter {
         }
 
 
-        holder.iv_item.setImageResource((int) mData.get(position).get("favorite_image"));
-        holder.tv_item.setText((String) mData.get(position).get("favorite_name"));
+        holder.iv_item_category.setImageResource((int) mData.get(position).get("image"));
+        holder.tv_item_category.setText((String) mData.get(position).get("name"));
 
-        holder.iv_item.setTag(position);
-        holder.tv_item.setTag(position);
+        holder.iv_item_category.setTag(position);
+        holder.tv_item_category.setTag(position);
 
 
-        holder.tv_item.setOnClickListener(new View.OnClickListener() {
+        holder.tv_item_category.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-
-                Log.d("debug", "进入详情页面" + v.getTag());
-                int stuffId = (int) mData.get((Integer) v.getTag()).get("favorite_id");
-                Utils.toDetailFragment(stuffId, transaction);
+                Log.d("debug", "进入list页面" + v.getTag());
+                Utils.toCategoryFragment((Integer) v.getTag(), transaction);
 
             }
         });
 
-        holder.iv_item.setOnClickListener(new View.OnClickListener() {
+        holder.iv_item_category.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 进入详情页面
-                Log.d("debug", "进入详情页面" + v.getTag());
-                int stuffId = (int) mData.get((Integer) v.getTag()).get("favorite_id");
-
+                Log.d("debug", "进入list页面" + v.getTag());
                 //开启事务跳转
-                Utils.toDetailFragment(stuffId, transaction);
+                Utils.toCategoryFragment((Integer) v.getTag(), transaction);
             }
 
         });

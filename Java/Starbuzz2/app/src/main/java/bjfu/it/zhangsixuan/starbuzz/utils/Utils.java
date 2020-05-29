@@ -23,6 +23,7 @@ import java.util.Objects;
 
 import bjfu.it.zhangsixuan.starbuzz.R;
 import bjfu.it.zhangsixuan.starbuzz.db.StarbuzzDatabaseHelper;
+import bjfu.it.zhangsixuan.starbuzz.ui.home.StuffCategoryFragment;
 import bjfu.it.zhangsixuan.starbuzz.ui.home.StuffFragment;
 
 import static bjfu.it.zhangsixuan.starbuzz.MainActivity.CART_TABLE;
@@ -45,6 +46,21 @@ public class Utils {
                 .commit();
     }
 
+    public static void toCategoryFragment(int categoryId, FragmentTransaction transaction) {
+        //开启事务跳转
+//        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        StuffCategoryFragment stuffCategoryFragment = new StuffCategoryFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(StuffCategoryFragment.EXTRA_CATEGORY_ID, categoryId);
+        stuffCategoryFragment.setArguments(bundle);
+
+        transaction
+                .addToBackStack(null)  //将当前fragment加入到返回栈中
+                .replace(R.id.nav_host_fragment, stuffCategoryFragment)
+                .show(stuffCategoryFragment)
+                .commit();
+    }
+
     // 计算mData的总价
     private static double getTotalPrice(List<Map<String, Object>> mData) {
         double tol = 0;
@@ -57,18 +73,18 @@ public class Utils {
     }
 
     // 刷新购物车的总价
-    public static void refreshTotalPrice( TextView tv_total_price, List<Map<String, Object>> mData){
+    public static void refreshTotalPrice(TextView tv_total_price, List<Map<String, Object>> mData) {
         double tol = getTotalPrice(mData);
         tv_total_price.setText(String.valueOf(tol));
     }
 
 
     // 购物车
-    public static void refreshCartNum(TextView tv_num, Context context){
+    public static void refreshCartNum(TextView tv_num, Context context) {
 //        TextView tv_num = Objects.requireNonNull(getActivity().findViewById(R.id.tv_num);
         int num = getCartItemNum(context);
         tv_num.setText(String.valueOf(num));
-        tv_num.setVisibility(num ==0 ? View.INVISIBLE: View.VISIBLE);
+        tv_num.setVisibility(num == 0 ? View.INVISIBLE : View.VISIBLE);
     }
 
     private static List<Map<String, Object>> getCartNData(Context context) {
@@ -106,18 +122,18 @@ public class Utils {
         return list;
     }
 
-    private static int getCartItemNum(Context context){
+    private static int getCartItemNum(Context context) {
         int numTol = 0;
         List<Map<String, Object>> list = getCartNData(context);
         for (Map<String, Object> map : list) {
-            numTol += (int)map.get("stuffNumber");
+            numTol += (int) map.get("stuffNumber");
         }
         return numTol;
     }
 
 
     // 添加一件商品到购物车，不含refresh RecycleView，但包括刷新下面的总数
-    public static void addOneToCart(int stuffId, Context context){
+    public static void addOneToCart(int stuffId, Context context) {
 
         Cursor cursor;
         SQLiteOpenHelper starbuzzDatabaseHelper = new StarbuzzDatabaseHelper(context);
@@ -153,15 +169,15 @@ public class Utils {
                         new String[]{String.valueOf(cartId)});
                 Log.d("debug", "update " + CART_TABLE + " " + result);
             }
-            refreshCartNum((TextView) ((FragmentActivity)context).findViewById(R.id.tv_num), context);
+            refreshCartNum((TextView) ((FragmentActivity) context).findViewById(R.id.tv_num), context);
         } catch (SQLiteException e) {
             Log.e("sqlite", Objects.requireNonNull(e.getMessage()));
-            Toast.makeText(context,"database unavailable", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "database unavailable", Toast.LENGTH_SHORT).show();
         }
     }
 
     // 减少一件商品到购物车，最小为1，不能删除，不含refresh
-    public static void removeOneFromCart(int stuffId, Context context){
+    public static void removeOneFromCart(int stuffId, Context context) {
 
         Cursor cursor;
         SQLiteOpenHelper starbuzzDatabaseHelper = new StarbuzzDatabaseHelper(context);
@@ -192,10 +208,10 @@ public class Utils {
                     Log.d("debug", "update " + CART_TABLE + " " + result);
                 }
             }
-            refreshCartNum((TextView) ((FragmentActivity)context).findViewById(R.id.tv_num), context);
+            refreshCartNum((TextView) ((FragmentActivity) context).findViewById(R.id.tv_num), context);
         } catch (SQLiteException e) {
             Log.e("sqlite", Objects.requireNonNull(e.getMessage()));
-            Toast.makeText(context,"database unavailable", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "database unavailable", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -32,6 +31,7 @@ import java.util.Objects;
 
 import bjfu.it.zhangsixuan.starbuzz.R;
 import bjfu.it.zhangsixuan.starbuzz.adapter.ImageTitleAdapter;
+import bjfu.it.zhangsixuan.starbuzz.adapter.Item3Adapter;
 import bjfu.it.zhangsixuan.starbuzz.adapter.ItemAdapter;
 import bjfu.it.zhangsixuan.starbuzz.bean.DataBean;
 import bjfu.it.zhangsixuan.starbuzz.db.StarbuzzDatabaseHelper;
@@ -67,36 +67,49 @@ public class HomeFragment extends Fragment {
 
         initView(root);
 
-        final ListView listView = root.findViewById(R.id.list_options);
-        setListViewHeightBasedOnChildren(listView);
+        // list options
+        setupCategoryGridView(root);
         // favorite
         setupFavoritesGridView(root);
 
-        // 为listView注册单击监听器
-        AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(), "click position:" + position, Toast.LENGTH_SHORT)
-                        .show();
-
-                categoryId = position;
-
-                //开启事务跳转
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                StuffCategoryFragment stuffCategoryFragment = new StuffCategoryFragment();
-                Bundle bundle = new Bundle();
-                bundle.putInt(StuffCategoryFragment.EXTRA_CATEGORY_ID, categoryId);
-                stuffCategoryFragment.setArguments(bundle);
-
-                transaction
-                        .addToBackStack(null)  //将当前fragment加入到返回栈中
-                        .replace(R.id.nav_host_fragment, stuffCategoryFragment)
-                        .show(stuffCategoryFragment)
-                        .commit();
-            }
-        };
-        listView.setOnItemClickListener(itemClickListener);
         return root;
+    }
+
+    private void setupCategoryGridView(View view) {
+        GridView gv_cate = view.findViewById(R.id.list_options);
+
+        List<Map<String, Object>> mapList = getCateData();
+
+        assert getFragmentManager() != null;
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        Item3Adapter cateAdapter = new Item3Adapter(getContext(), mapList, transaction);
+        gv_cate.setAdapter(cateAdapter);
+        setGridViewHeightBasedOnChildren(view, gv_cate, 1);
+    }
+
+    private List<Map<String, Object>> getCateData() {
+        List<Map<String, Object>> list = new ArrayList<>();
+
+        // drink
+        Map<String, Object> hashMap1 = new HashMap<>();
+        hashMap1.put("image", R.drawable.drink);
+        hashMap1.put("name", "Drink");
+        list.add(hashMap1);
+
+
+        // food
+        Map<String, Object> hashMap2 = new HashMap<>();
+        hashMap2.put("image", R.drawable.food);
+        hashMap2.put("name", "Food");
+        list.add(hashMap2);
+
+
+        // store
+        Map<String, Object> hashMap3 = new HashMap<>();
+        hashMap3.put("image", R.drawable.store);
+        hashMap3.put("name", "Store");
+        list.add(hashMap3);
+        return list;
     }
 
     private void setupFavoritesGridView(View view) {
@@ -113,7 +126,7 @@ public class HomeFragment extends Fragment {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         ItemAdapter favAdapter = new ItemAdapter(getContext(), mapList, transaction);
         gv_fav.setAdapter(favAdapter);
-        setGridViewHeightBasedOnChildren(view, gv_fav);
+        setGridViewHeightBasedOnChildren(view, gv_fav, 3);
     }
 
     private List<Map<String, Object>> getFavData() {
@@ -196,7 +209,7 @@ public class HomeFragment extends Fragment {
     /*
      * 动态修改GridView的高度
      */
-    public void setGridViewHeightBasedOnChildren(View view, GridView gridView) {
+    public void setGridViewHeightBasedOnChildren(View view, GridView gridView, int col) {
         ListAdapter listAdapter = gridView.getAdapter();
         if (listAdapter == null) {
             return;
@@ -210,7 +223,7 @@ public class HomeFragment extends Fragment {
 //        3 1;
 //        4 2;
 
-        int num = (int) (Math.ceil(listAdapter.getCount() / 3.0));
+        int num = (int) (Math.ceil(listAdapter.getCount() / (1.0 * col)));
         for (int i = 0; i < num; i++) {
             View listItem = listAdapter.getView(i, null, gridView);
             listItem.measure(0, 0);

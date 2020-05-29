@@ -32,7 +32,7 @@ import static bjfu.it.zhangsixuan.starbuzz.MainActivity.STUFF_TABLE;
 public class StuffCategoryFragment extends Fragment {
     private Cursor cursor;
 
-    static final String EXTRA_CATEGORY_ID = "categoryId";
+    public static final String EXTRA_CATEGORY_ID = "categoryId";
 
     @Nullable
     @Override
@@ -59,7 +59,6 @@ public class StuffCategoryFragment extends Fragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onActivityCreated(savedInstanceState);
     }
 
