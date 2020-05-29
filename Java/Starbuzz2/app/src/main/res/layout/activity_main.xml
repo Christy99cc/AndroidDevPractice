@@ -30,6 +30,17 @@
             android:textColor="#fff"
             android:visibility="gone"
             tools:ignore="MissingConstraints" />
+
+        <Button
+            android:id="@+id/btn_music"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="end"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="0dp"
+            android:background="@drawable/ic_music_note_black_24dp"
+            android:gravity="center"
+            tools:ignore="MissingConstraints" />
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 
     <fragment

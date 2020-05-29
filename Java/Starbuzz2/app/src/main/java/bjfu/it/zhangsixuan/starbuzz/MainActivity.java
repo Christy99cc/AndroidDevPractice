@@ -1,7 +1,11 @@
 package bjfu.it.zhangsixuan.starbuzz;
 
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -11,6 +15,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import bjfu.it.zhangsixuan.starbuzz.music.MyBroadcastReceiver;
+import bjfu.it.zhangsixuan.starbuzz.music.PlayingMusicServices;
 import bjfu.it.zhangsixuan.starbuzz.utils.Utils;
 import io.sentry.Sentry;
 import io.sentry.android.AndroidSentryClientFactory;
@@ -18,6 +24,17 @@ import io.sentry.android.AndroidSentryClientFactory;
 public class MainActivity extends AppCompatActivity {
     public static final String STUFF_TABLE = "STUFF";
     public static final String CART_TABLE = "CART";
+
+    /**
+     * 规定开始音乐、暂停音乐、结束音乐的标志
+     */
+    public static final int PLAY_MUSIC = 1;
+    public static final int PAUSE_MUSIC = 2;
+    public static final int STOP_MUSIC = 3;
+    public static int musicState = STOP_MUSIC;
+
+
+    private MyBroadcastReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +53,38 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
+
+        receiver = new MyBroadcastReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("com.complete");
+        registerReceiver(receiver, filter);
+
+        Button btn_music = findViewById(R.id.btn_music);
+        btn_music.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("debug", "music");
+                musicState = (musicState == STOP_MUSIC) ? PLAY_MUSIC : STOP_MUSIC;
+                playingmusic(musicState);
+            }
+        });
+
         // 购物车件数
-        Utils.refreshCartNum((TextView) findViewById(R.id.tv_num), this);
+        Utils.refreshCartNum(findViewById(R.id.tv_num), this);
+    }
+
+
+    private void playingmusic(int type) {
+        //启动服务，播放音乐
+        Intent intent = new Intent(this, PlayingMusicServices.class);
+        intent.putExtra("type", type);
+        startService(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
     }
 
 
