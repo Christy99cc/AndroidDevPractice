@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -21,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.youth.banner.Banner;
+import com.youth.banner.adapter.BannerAdapter;
 import com.youth.banner.indicator.CircleIndicator;
 
 import java.util.ArrayList;
@@ -36,13 +36,13 @@ import bjfu.it.zhangsixuan.starbuzz.adapter.ItemAdapter;
 import bjfu.it.zhangsixuan.starbuzz.bean.DataBean;
 import bjfu.it.zhangsixuan.starbuzz.db.StarbuzzDatabaseHelper;
 import bjfu.it.zhangsixuan.starbuzz.utils.Utils;
+import bjfu.it.zhangsixuan.starbuzz.viewholder.ImageTitleHolder;
 
 import static bjfu.it.zhangsixuan.starbuzz.MainActivity.STUFF_TABLE;
 
 
 public class HomeFragment extends Fragment {
 
-    private int categoryId;
     Cursor cursor;
 
     private static List<DataBean> BANNER_ITEMS = new ArrayList<DataBean>() {
@@ -165,14 +165,13 @@ public class HomeFragment extends Fragment {
 
     private void initView(View view) {
 
-        final Banner banner = view.findViewById(R.id.banner);
+        Banner<Object,BannerAdapter> banner = view.findViewById(R.id.banner);
+        ImageTitleAdapter imageTitleAdapter = new ImageTitleAdapter(BANNER_ITEMS);
         //--------------------------简单使用-------------------------------
-        banner.addBannerLifecycleObserver(this)//添加生命周期观察者
-                .setAdapter(new ImageTitleAdapter(BANNER_ITEMS))
-                .setIndicator(new CircleIndicator(getActivity()))
-                .setUserInputEnabled(true);
-
-        banner.setOnBannerListener((data, position) -> {
+        banner.addBannerLifecycleObserver(this);//添加生命周期观察者
+        banner.setAdapter(imageTitleAdapter);
+        banner.setIndicator(new CircleIndicator(getActivity()))
+                .setUserInputEnabled(true).setOnBannerListener((data, position) -> {
             int stuffId = ((DataBean) data).getId();
             //开启事务跳转
             assert getFragmentManager() != null;
@@ -216,12 +215,6 @@ public class HomeFragment extends Fragment {
         }
 
         int tolHeight = 0;
-//
-//        0 0;
-//        1 1;
-//        2 1;
-//        3 1;
-//        4 2;
 
         int num = (int) (Math.ceil(listAdapter.getCount() / (1.0 * col)));
         for (int i = 0; i < num; i++) {

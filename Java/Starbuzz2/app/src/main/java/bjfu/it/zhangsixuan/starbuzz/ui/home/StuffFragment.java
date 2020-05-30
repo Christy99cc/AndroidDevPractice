@@ -124,6 +124,7 @@ public class StuffFragment extends Fragment {
         //获取Bundle
         Bundle bundle = getArguments();
 
+        assert bundle != null;
         stuffId = bundle.getInt(EXTRA_STUFFID);
 
         // 点击收藏 或者取消收藏

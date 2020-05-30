@@ -26,7 +26,7 @@ import bjfu.it.zhangsixuan.starbuzz.viewholder.ImageTitleHolder;
  * 自定义布局，图片+标题
  */
 
-public class ImageTitleAdapter extends BannerAdapter<DataBean, ImageTitleHolder> {
+public class ImageTitleAdapter<D, I extends RecyclerView.ViewHolder> extends BannerAdapter<DataBean, ImageTitleHolder> {
 
     public ImageTitleAdapter(List<DataBean> mDatas) {
         super(mDatas);
