@@ -128,13 +128,4 @@ public class StarbuzzDatabaseHelper extends SQLiteOpenHelper {
         Log.d("sqlite", "insert" + name + ",_id" + result);
     }
 
-    private static void insertStuffToCart(SQLiteDatabase db, int stuffId,
-                                          int number) {
-        ContentValues staffValues = new ContentValues();
-        staffValues.put("STUFF_ID", stuffId);
-        staffValues.put("NUMBER", number);
-
-        long result = db.insert("CART", null, staffValues);
-        Log.d("sqlite", "insert" + stuffId + ",ID" + result);
-    }
 }

@@ -46,7 +46,6 @@ public class StuffCategoryFragment extends Fragment {
         Item2Adapter listAdapter = new Item2Adapter(getContext(), mData, transaction);
         listDrinks.setAdapter(listAdapter);
 
-
         return root;
     }
 

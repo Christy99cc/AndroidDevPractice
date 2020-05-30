@@ -29,13 +29,18 @@ import bjfu.it.zhangsixuan.starbuzz.ui.home.StuffFragment;
 import static bjfu.it.zhangsixuan.starbuzz.MainActivity.CART_TABLE;
 
 public class Utils {
+    /**
+     * 跳转到详情页面的方法
+     * @param stuffId
+     * @param transaction
+     */
     public static void toDetailFragment(int stuffId, FragmentTransaction transaction) {
         //开启事务跳转
 //        assert getFragmentManager() != null;
 //        FragmentTransaction transaction = getFragmentManager().beginTransaction();
         StuffFragment stuffFragment = new StuffFragment();
+        // 传递stuffId参数
         Bundle bundle = new Bundle();
-
         bundle.putInt(StuffFragment.EXTRA_STUFFID, stuffId);
         stuffFragment.setArguments(bundle);
 
@@ -43,13 +48,19 @@ public class Utils {
                 .addToBackStack(null)  //将当前fragment加入到返回栈中
                 .replace(R.id.nav_host_fragment, stuffFragment)
                 .show(stuffFragment)
-                .commit();
+                .commit();   //提交
     }
 
-    public static void toCategoryFragment(int categoryId, FragmentTransaction transaction) {
+    /**
+     * 跳转到单个类别下的商品列表下
+     * @param categoryId
+     * @param transaction
+     */
+    public static void toStuffCategoryFragment(int categoryId, FragmentTransaction transaction) {
         //开启事务跳转
 //        FragmentTransaction transaction = getFragmentManager().beginTransaction();
         StuffCategoryFragment stuffCategoryFragment = new StuffCategoryFragment();
+        // 传递categoryId参数
         Bundle bundle = new Bundle();
         bundle.putInt(StuffCategoryFragment.EXTRA_CATEGORY_ID, categoryId);
         stuffCategoryFragment.setArguments(bundle);
@@ -58,7 +69,7 @@ public class Utils {
                 .addToBackStack(null)  //将当前fragment加入到返回栈中
                 .replace(R.id.nav_host_fragment, stuffCategoryFragment)
                 .show(stuffCategoryFragment)
-                .commit();
+                .commit();   // 提交
     }
 
     // 计算mData的总价
