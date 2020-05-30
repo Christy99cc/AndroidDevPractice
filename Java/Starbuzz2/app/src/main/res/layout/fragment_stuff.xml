@@ -36,7 +36,7 @@
                 android:layout_marginTop="390dp"
                 android:layout_marginEnd="@dimen/default_gap"
                 android:gravity="start|center_vertical"
-                android:text="name"
+                android:text="Cappuccino"
                 android:textColor="#481F91"
                 android:textSize="20sp" />
 

@@ -41,8 +41,9 @@ public class CartFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         // 通过CART数据库的数据，来决定加载哪一个fragment
 
-        View root = null;
+        View root;
 
+        // 获取购物车内的商品数据，即CART表的数据
         mData = getData(getActivity());
 
         // 通过list有无数据，决定显示which one

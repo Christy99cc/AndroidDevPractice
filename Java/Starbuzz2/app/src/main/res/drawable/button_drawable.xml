@@ -6,12 +6,5 @@
     <solid android:color="#4126B1" />
     <!--设置圆角-->
     <corners android:radius="10dip" />
-<!--    <padding-->
-<!--        android:bottom="12dp"-->
-<!--        android:left="63dp"-->
-<!--        android:right="63dp"-->
-<!--        android:top="12dp"-->
-<!--        />-->
-    <!--设置边框线的宽度和颜色-->
 
 </shape>

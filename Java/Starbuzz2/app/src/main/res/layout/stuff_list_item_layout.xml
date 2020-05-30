@@ -16,13 +16,12 @@
         android:textColor="#39137C"
         android:textSize="18sp" />
 
+    <!--stuff_id, gone-->
     <TextView
         android:id="@+id/stuff_id"
         android:layout_width="1dp"
         android:layout_height="1dp"
         android:visibility="gone" />
-
-
 
     <Button
         android:id="@+id/tv_add_to_cart"
@@ -30,7 +29,6 @@
         android:layout_height="25dp"
         android:layout_gravity="center_vertical"
         android:layout_marginEnd="@dimen/default_gap"
-        android:background="@drawable/ic_add_circle_black_24dp"
-        />
+        android:background="@drawable/ic_add_circle_black_24dp" />
 
 </LinearLayout>

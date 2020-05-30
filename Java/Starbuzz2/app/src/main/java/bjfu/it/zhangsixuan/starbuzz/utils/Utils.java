@@ -31,6 +31,7 @@ import static bjfu.it.zhangsixuan.starbuzz.MainActivity.CART_TABLE;
 public class Utils {
     /**
      * 跳转到详情页面的方法
+     *
      * @param stuffId
      * @param transaction
      */
@@ -53,6 +54,7 @@ public class Utils {
 
     /**
      * 跳转到单个类别下的商品列表下
+     *
      * @param categoryId
      * @param transaction
      */
@@ -143,44 +145,36 @@ public class Utils {
     }
 
 
-    // 添加一件商品到购物车，不含refresh RecycleView，但包括刷新下面的总数
+    // 添加一件商品到购物车，不含refresh RecycleView，但包括刷新购物车内的商品总数
     public static void addOneToCart(int stuffId, Context context) {
-
         Cursor cursor;
         SQLiteOpenHelper starbuzzDatabaseHelper = new StarbuzzDatabaseHelper(context);
-
         try (SQLiteDatabase db = starbuzzDatabaseHelper.getReadableDatabase()) {
-
             int oldNumber = 0;
             int cartId = 0;
-
             // 1. 查现在的number
             cursor = db.query(CART_TABLE, new String[]{"ID", "NUMBER"}, "STUFF_ID=?",
                     new String[]{String.valueOf(stuffId)},
                     null, null, null, null);
-
             if (cursor.moveToFirst()) { // 如果已经存在记录
                 oldNumber = cursor.getInt(cursor.getColumnIndex("NUMBER"));
                 cartId = cursor.getInt(cursor.getColumnIndex("ID"));
             }
-
             // 2. 准备数据
             ContentValues contentValues = new ContentValues();
             contentValues.put("STUFF_ID", stuffId);
             contentValues.put("NUMBER", oldNumber + 1);
-
             // 3.更新CART表
-            if (oldNumber == 0) {
-                // insert
+            if (oldNumber == 0) {// insert
                 long result = db.insert(CART_TABLE, null, contentValues);
                 Log.d("debug", "insert " + CART_TABLE + " " + result);
-            } else {
-                // update
+            } else {// update
                 long result = db.update(CART_TABLE, contentValues, "ID=?",
                         new String[]{String.valueOf(cartId)});
                 Log.d("debug", "update " + CART_TABLE + " " + result);
             }
-            refreshCartNum((TextView) ((FragmentActivity) context).findViewById(R.id.tv_num), context);
+            // 刷新购物车内的商品总数
+            refreshCartNum(((FragmentActivity) context).findViewById(R.id.tv_num), context);
         } catch (SQLiteException e) {
             Log.e("sqlite", Objects.requireNonNull(e.getMessage()));
             Toast.makeText(context, "database unavailable", Toast.LENGTH_SHORT).show();

@@ -45,38 +45,28 @@ public class StuffFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        //获取Bundle
+        //获取Bundle，得到stuffId
         Bundle bundle = getArguments();
         assert bundle != null;
         stuffId = bundle.getInt(EXTRA_STUFFID);
-
+        // 加载布局fragment_stuff
         View root = inflater.inflate(R.layout.fragment_stuff, container, false);
+        // 获取引用
         cb_favorite = root.findViewById(R.id.favorite);
         tv_price = root.findViewById(R.id.price);
         btn_add_to_cart = root.findViewById(R.id.btn_add_to_cart);
-
-        /*
-         * 先实例化helper，再获取数据库引用
-         */
+        //先实例化helper，再获取数据库引用
         SQLiteOpenHelper starbuzzDatabaseHelper = new StarbuzzDatabaseHelper(getActivity());
-        /*
-         * try with resource 自动关闭数据库
-         */
+        // try with resource 自动关闭数据库
         try (SQLiteDatabase db = starbuzzDatabaseHelper.getReadableDatabase()) {
 
             Log.d("debug", "stuffId:" + stuffId);
+            // 查询stuffId对应的记录
             Cursor cursor = db.query(STUFF_TABLE,
-                    new String[]{"NAME",
-                            "DESCRIPTION",
-                            "IMAGE_SOURCE_ID",
-                            "FAVORITE",
-                            "PRICE"
-                    },
-                    "_id=?",
-                    new String[]{Integer.toString(stuffId)},
+                    new String[]{"NAME", "DESCRIPTION", "IMAGE_SOURCE_ID", "FAVORITE", "PRICE"},
+                    "_id=?", new String[]{Integer.toString(stuffId)},
                     null, null, null);
-
+            // 如果存在数据，获取name、description、image、isFavorite和price并在界面上显示（set）
             if (cursor.moveToFirst()) {
                 String nameText = cursor.getString(0);
                 String descriptionText = cursor.getString(1);
@@ -106,34 +96,27 @@ public class StuffFragment extends Fragment {
 
             }
             cursor.close();
-
-
         } catch (SQLiteException e) {
             Log.d("sqlite", Objects.requireNonNull(e.getMessage()));
             Toast toast = Toast.makeText(getActivity(), "Database unavailable", Toast.LENGTH_SHORT);
             toast.show();
         }
-
         return root;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        //获取Bundle
+        //获取Bundle中的stuffId
         Bundle bundle = getArguments();
-
         assert bundle != null;
         stuffId = bundle.getInt(EXTRA_STUFFID);
-
         // 点击收藏 或者取消收藏
         cb_favorite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 ContentValues drinkValues = new ContentValues();
                 drinkValues.put("FAVORITE", cb_favorite.isChecked());
-
                 // 获得可写数据库引用
                 SQLiteOpenHelper starbuzzDatabaseHelper = new StarbuzzDatabaseHelper(getActivity());
                 try (SQLiteDatabase db = starbuzzDatabaseHelper.getWritableDatabase()) {
@@ -145,10 +128,8 @@ public class StuffFragment extends Fragment {
                     Log.d("sqlite", e.getMessage());
                     Toast.makeText(getActivity(), "Database unavailable", Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
-
         // 点击加入购物车按钮
         btn_add_to_cart.setOnClickListener(new View.OnClickListener() {
             @Override
