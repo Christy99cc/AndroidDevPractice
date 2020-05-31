@@ -35,34 +35,38 @@ import static bjfu.it.zhangsixuan.starbuzz.MainActivity.STUFF_TABLE;
 
 public class CartFragment extends Fragment {
 
+    // 存放购物车内商品的list
     private List<Map<String, Object>> mData;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        // 通过CART数据库的数据，来决定加载哪一个fragment
-
         View root;
-
         // 获取购物车内的商品数据，即CART表的数据
         mData = getData(getActivity());
-
-        // 通过list有无数据，决定显示which one
+        // 通过list有无数据，决定加载哪一个fragment
         if (mData.size() == 0) {
+            // 无数据，加载空购物车fragment_vacant_cart
             root = inflater.inflate(R.layout.fragment_vacant_cart, container, false);
         } else {
+            // 有数据，加载fragment_cart
             root = inflater.inflate(R.layout.fragment_cart, container, false);
+            // 获取引用
             RecyclerView rv_cart = root.findViewById(R.id.rv_cart);
+            // 在保证不空的前提下
             assert getFragmentManager() != null;
+            // 开启事务跳转
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            // 实例化自定义适配器RVCartAdapter
             RVCartAdapter rvCartAdapter = new RVCartAdapter(mData, getActivity(), transaction);
+            // 设置LayoutManager
             rv_cart.setLayoutManager(new LinearLayoutManager(getContext()));
+            // 设置适配器
             rv_cart.setAdapter(rvCartAdapter);
-
+            // 获取价格显示的TextView的引用
             TextView tv_total_price = root.findViewById(R.id.total_price);
+            // 显示购物车内物品的总价
             Utils.refreshTotalPrice(tv_total_price, mData);
         }
-
-
         return root;
     }
 

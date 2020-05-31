@@ -26,7 +26,8 @@ import bjfu.it.zhangsixuan.starbuzz.viewholder.ImageTitleHolder;
  * 自定义布局，图片+标题
  */
 
-public class ImageTitleAdapter<D, I extends RecyclerView.ViewHolder> extends BannerAdapter<DataBean, ImageTitleHolder> {
+public class ImageTitleAdapter<D, I extends RecyclerView.ViewHolder>
+        extends BannerAdapter<DataBean, ImageTitleHolder> {
 
     public ImageTitleAdapter(List<DataBean> mDatas) {
         super(mDatas);
@@ -34,6 +35,7 @@ public class ImageTitleAdapter<D, I extends RecyclerView.ViewHolder> extends Ban
 
     @Override
     public ImageTitleHolder onCreateHolder(ViewGroup parent, int viewType) {
+        // 加载banner_image_title
         return new ImageTitleHolder(BannerUtils.getView(parent,R.layout.banner_image_title));
     }
 
@@ -42,7 +44,4 @@ public class ImageTitleAdapter<D, I extends RecyclerView.ViewHolder> extends Ban
         holder.imageView.setImageResource(data.getImageRes());
         holder.title.setText(data.getName());
     }
-
-
-
 }

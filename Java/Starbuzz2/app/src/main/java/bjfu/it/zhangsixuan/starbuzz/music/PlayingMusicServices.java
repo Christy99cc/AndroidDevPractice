@@ -38,7 +38,6 @@ public class PlayingMusicServices extends Service {
         super.onCreate();
         if (mediaPlayer == null) {
             mediaPlayer = new MediaPlayer();
-
             //为播放器添加播放完成时的监听器
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
@@ -81,21 +80,18 @@ public class PlayingMusicServices extends Service {
                     isStop = false;
                 } else if (!isStop && mediaPlayer.isPlaying() && mediaPlayer != null) {
                     mediaPlayer.start();
-                }
-                break;
+                }break;
             case MainActivity.PAUSE_MUSIC:
                 //播放器不为空，并且正在播放
                 if (mediaPlayer != null && mediaPlayer.isPlaying()) {
                     mediaPlayer.pause();
-                }
-                break;
+                }break;
             case MainActivity.STOP_MUSIC:
                 if (mediaPlayer!=null){
                     //停止之后要开始播放音乐
                     mediaPlayer.stop();
                     isStop=true;
-                }
-                break;
+                }break;
         }
         return START_NOT_STICKY;
     }

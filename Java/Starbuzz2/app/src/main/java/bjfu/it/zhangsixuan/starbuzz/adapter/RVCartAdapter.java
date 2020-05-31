@@ -35,6 +35,7 @@ public class RVCartAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // 加载购物车内单个item的布局cart_item_layout
         View view = View.inflate(parent.getContext(), R.layout.cart_item_layout, null);
         return new RViewHolder(view);
     }
@@ -47,6 +48,7 @@ public class RVCartAdapter extends RecyclerView.Adapter {
         ((RViewHolder) holder).tv_item_price.setText(String.valueOf(list.get(position).get("stuffPrice")));
         ((RViewHolder) holder).tv_item_number.setText(String.valueOf(list.get(position).get("stuffNumber")));
 
+        // 设置Tag为position，方便点击事件时获取点击位置
         ((RViewHolder) holder).iv_cart_img.setTag(position);
         ((RViewHolder) holder).tv_item_name.setTag(position);
         ((RViewHolder) holder).iv_add.setTag(position);
@@ -55,53 +57,58 @@ public class RVCartAdapter extends RecyclerView.Adapter {
 
         // +\- 采用默认即可
 
-        // 点击事件
-        // +
+        // 点击事件+， 添加一件商品至购物车
         ((RViewHolder) holder).iv_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("debug", "点击了position" + v.getTag() + "的+号");
+                Log.d("debug", "点击了position" + v.getTag() + "的+号");
+                // 获取点击的商品的stuffId
                 int stuffId = (int) list.get((Integer) v.getTag()).get("stuffId");
+                // 根据stuffId添加至购物车
                 Utils.addOneToCart(stuffId, context);
-                // Attention: 刷新购物车
+                // Attention: 重新获取并绑定数据，刷新购物车
                 list = CartFragment.getData(context);
                 onBindViewHolder(holder, (Integer) v.getTag());
-                // 刷新总价
+                // 刷新购物车的商品总价
                 Utils.refreshTotalPrice(((FragmentActivity) context).findViewById(R.id.total_price), list);
             }
         });
 
-        // 点击事件
-        // -
+        // 点击事件-，从购物车中删去一件商品
         ((RViewHolder) holder).iv_reduce.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("debug", "点击了position" + v.getTag() + "的+号");
+                Log.d("debug", "点击了position" + v.getTag() + "的+号");
+                // 获取点击的商品的stuffId
                 int stuffId = (int) list.get((Integer) v.getTag()).get("stuffId");
+                // 根据stuffId从购物车删去一件商品
                 Utils.removeOneFromCart(stuffId, context);
-                // Attention: 刷新购物车
+                // Attention: 重新获取并绑定数据，刷新购物车
                 list = CartFragment.getData(context);
                 onBindViewHolder(holder, (Integer) v.getTag());
-                // 刷新总价
+                // 刷新购物车的商品总价
                 Utils.refreshTotalPrice(((FragmentActivity) context).findViewById(R.id.total_price), list);
             }
         });
 
-        // 点击事件
-        // details
+        // 在购物车中点击图片或者名称，进入详情页面
+        // 点击图片进入details
         ((RViewHolder) holder).iv_cart_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("debug", "点击了position" + v.getTag() + " 的img");
+                Log.d("debug", "点击了position" + v.getTag() + " 的img");
+                // 获取点击的商品的stuffId
                 int stuffId = (int) list.get((Integer) v.getTag()).get("stuffId");
+                // 根据stuffId进入相应的详情页面
                 Utils.toDetailFragment(stuffId, transaction);
             }
         });
 
+        // 点击商品名称进入details
         ((RViewHolder) holder).tv_item_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("debug", "点击了position" + v.getTag() + " 的name");
+                Log.d("debug", "点击了position" + v.getTag() + " 的name");
                 int stuffId = (int) list.get((Integer) v.getTag()).get("stuffId");
                 Utils.toDetailFragment(stuffId, transaction);
             }
@@ -115,12 +122,12 @@ public class RVCartAdapter extends RecyclerView.Adapter {
 
     static final class RViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView iv_cart_img;  // 图片
-        TextView tv_item_name;  // 名字
-        TextView tv_item_price; // 价格
-        ImageView iv_reduce;
-        ImageView iv_add;
-        TextView tv_item_number; // 数量
+        ImageView iv_cart_img;      // 图片
+        TextView tv_item_name;      // 名字
+        TextView tv_item_price;     // 价格
+        ImageView iv_reduce;        // 加号
+        ImageView iv_add;           // 减号
+        TextView tv_item_number;    // 数量
 
         RViewHolder(@NonNull View itemView) {
             super(itemView);

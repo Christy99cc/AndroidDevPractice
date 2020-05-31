@@ -92,33 +92,33 @@ public class Utils {
     }
 
 
-    // 购物车
+    // 购物车右上角数字的刷新显示
     public static void refreshCartNum(TextView tv_num, Context context) {
 //        TextView tv_num = Objects.requireNonNull(getActivity().findViewById(R.id.tv_num);
+        // 获取购物车中的商品数量
         int num = getCartItemNum(context);
+        // 设置商品数量
         tv_num.setText(String.valueOf(num));
+        // 设置右上角数字是否可见，若购物车没有商品则不可见
         tv_num.setVisibility(num == 0 ? View.INVISIBLE : View.VISIBLE);
     }
 
+
+    // 购物车中的商品信息，包含cartId、stuffId、stuffNumber
     private static List<Map<String, Object>> getCartNData(Context context) {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-
         Cursor cursor1;
         // map数据准备
         SQLiteOpenHelper starbuzzDatabaseHelper = new StarbuzzDatabaseHelper(context);
-
         try (SQLiteDatabase db = starbuzzDatabaseHelper.getReadableDatabase()) {
-
             // 全部取出来
             cursor1 = db.query(CART_TABLE, new String[]{"ID", "STUFF_ID", "NUMBER"}, null,
                     null, null, null, null, null);
-
             while (cursor1.moveToNext()) {
                 // 添加
-                // 需要的是：cartId, stuffId, stuffName(display), stuffPrice, stuffImgId, stuffNumber
+                // 需要的是：cartId, stuffId, stuffNumber
                 // 移动光标到下一行
                 Map<String, Object> map = new HashMap<String, Object>();
-
                 int cartId = cursor1.getInt(cursor1.getColumnIndex("ID"));
                 int stuffId = cursor1.getInt(cursor1.getColumnIndex("STUFF_ID"));
                 int stuffNumber = cursor1.getInt(cursor1.getColumnIndex("NUMBER"));
@@ -127,7 +127,6 @@ public class Utils {
                 map.put("stuffNumber", stuffNumber);
                 list.add(map);
             }
-
         } catch (
                 SQLiteException e) {
             Log.e("debug", Objects.requireNonNull(e.getMessage()));
@@ -135,9 +134,12 @@ public class Utils {
         return list;
     }
 
+    // 购物车的商品总数
     private static int getCartItemNum(Context context) {
         int numTol = 0;
+        // 购物车中的商品信息，包含cartId、stuffId、stuffNumber
         List<Map<String, Object>> list = getCartNData(context);
+        // 取购物车中每一种商品的数量并进行累加
         for (Map<String, Object> map : list) {
             numTol += (int) map.get("stuffNumber");
         }
@@ -181,26 +183,20 @@ public class Utils {
         }
     }
 
-    // 减少一件商品到购物车，最小为1，不能删除，不含refresh
+    // 从购物车中减少一件商品，最小为1，不能删除，不含refresh RecycleView，但包括刷新购物车内的商品总数
     public static void removeOneFromCart(int stuffId, Context context) {
-
         Cursor cursor;
         SQLiteOpenHelper starbuzzDatabaseHelper = new StarbuzzDatabaseHelper(context);
-
         try (SQLiteDatabase db = starbuzzDatabaseHelper.getReadableDatabase()) {
-
             int oldNumber = 0;
             int cartId = 0;
-
             // 1. 查现在的number
             cursor = db.query(CART_TABLE, new String[]{"ID", "NUMBER"}, "STUFF_ID=?",
                     new String[]{String.valueOf(stuffId)},
                     null, null, null, null);
-
             if (cursor.moveToFirst()) { // 如果已经存在记录
                 oldNumber = cursor.getInt(cursor.getColumnIndex("NUMBER"));
                 cartId = cursor.getInt(cursor.getColumnIndex("ID"));
-
                 if (oldNumber > 1) {
                     // 2. 准备数据
                     ContentValues contentValues = new ContentValues();
@@ -213,7 +209,8 @@ public class Utils {
                     Log.d("debug", "update " + CART_TABLE + " " + result);
                 }
             }
-            refreshCartNum((TextView) ((FragmentActivity) context).findViewById(R.id.tv_num), context);
+            // 刷新购物车内的商品总数
+            refreshCartNum(((FragmentActivity) context).findViewById(R.id.tv_num), context);
         } catch (SQLiteException e) {
             Log.e("sqlite", Objects.requireNonNull(e.getMessage()));
             Toast.makeText(context, "database unavailable", Toast.LENGTH_SHORT).show();
